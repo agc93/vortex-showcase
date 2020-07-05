@@ -1,17 +1,8 @@
-import path = require('path');
-import { IInstruction, IExtensionApi, IGame, IState, IMod } from "vortex-api/lib/types/api";
-import { remote } from 'electron';
+import { IState, IMod } from "vortex-api/lib/types/api";
 import { selectors, util } from 'vortex-api';
-import { ModInfoDisplay } from './modinfo';
 
 export function toFriendlyName(str: string): string {
     return str.replace(/([A-Z])/g, ' $1').trim()
-}
-
-export function getGamePath(api: IExtensionApi, game: IGame, useDataPath?: boolean) {
-    const state = api.getState();
-    const discovery = state.settings.gameMode.discovered[game.id];
-    return useDataPath ? path.join(discovery.path, 'Data') : discovery.path;
 }
 
 export function isSupported(instances?: string[]) : boolean {

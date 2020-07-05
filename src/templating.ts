@@ -7,23 +7,11 @@ import path = require('path');
 
 export interface IShowcaseRenderer {
     createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay
-    createShowcase(api: IExtensionApi, model: ITemplateModel, mods: ModInfoDisplay[]): Promise<string>;
+    createShowcase(api: IExtensionApi, model: ITemplateModel): Promise<string>;
 }
 
-export class MarkdownRenderer implements IShowcaseRenderer {
-    createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay {
-        var model = ModInfoDisplay.create(api, mod);
-        if (model.source && model.source == 'nexus' && model.link) {
-            model.source = `[Nexus Mods](${model.link})`;
-        }
-        return model;
-    }
-    createShowcase(api: IExtensionApi, model: ITemplateModel, mods: ModInfoDisplay[]): Promise<string> {
-        var template = fs.readFileSync(path.join(__dirname, 'markdown.mustache'), { encoding: 'utf8' });
-        var output = Mustache.render(template, model);
-        return Promise.resolve(output);
-    }
-
+export interface IShowcaseAction {
+    handleShowcase(renderer: string, output: string): Promise<void>
 }
 
 export async function renderShowcase(api: IExtensionApi, gameTitle: string, showcaseTitle: string, mods: IMod[], renderer: IShowcaseRenderer) {
@@ -36,7 +24,7 @@ export async function renderShowcase(api: IExtensionApi, gameTitle: string, show
         user: user,
         mods: modInfo
     }
-    var output = await renderer.createShowcase(api, model, modInfo);
+    var output = await renderer.createShowcase(api, model);
     if (output && output.length > 0) {
         api.sendNotification({
             type: 'success',
@@ -68,7 +56,9 @@ export function createMarkdownShowcase(api: IExtensionApi, gameTitle: string, sh
         game: gameTitle,
         title: showcaseTitle,
         user: user,
-        mods: mods.map(m => createMarkdownModel(api, m))
+        mods: mods.map(m => {
+            return createMarkdownModel(api, m) ?? ModInfoDisplay.create(api, m)
+        })
     }
     var output = Mustache.render(template, model,);
     if (output && output.length > 0) {

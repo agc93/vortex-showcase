@@ -5,14 +5,14 @@
 ## {{{game}}} Mods
 
 {{#mods}}
-#### {{name}} v{{version}}
+#### {{name}} {{#version}}v{{.}}{{/version}}
 
 Installed {{{installed}}} from {{{source}}}
 
 > by {{author}} for {{gameId}}
 > Category: {{category}}
 
-{{description}}
+{{{description}}}
 
 
 {{/mods}}

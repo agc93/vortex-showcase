@@ -24,7 +24,7 @@ export class ModInfoDisplay {
             image: util.getSafe(mod.attributes, ['pictureUrl'], undefined),
             category: getCategoryName(util.getSafe(mod.attributes, ['category'], undefined), api.getState()) ?? 'Unknown',
             author: util.getSafe(mod.attributes, ['author'], 'Unknown Author'),
-            version: util.getSafe(mod.attributes, ['version'], '???'),
+            version: util.getSafe(mod.attributes, ['version'], undefined),
             installed: formatInstallTime(util.getSafe(mod.attributes, ['installTime'], undefined)),
             source: util.getSafe(mod.attributes, ['source'], 'unknown source'),
             link: getModLink(mod, game)
