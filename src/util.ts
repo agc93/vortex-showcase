@@ -26,6 +26,10 @@ export function formatInstallTime(installTime: string) : string | undefined {
     }
 }
 
+export function getModName(mod: IMod, nameFallback?: string): string {
+    return util.getSafe(mod.attributes, ['modName'], util.getSafe(mod.attributes, ['name'], util.getSafe(mod.attributes, ['logicalFileName'], undefined))) ?? nameFallback;
+}
+
 export function getModLink(mod: IMod, gameFallback?: string): string {
     var source = util.getSafe(mod.attributes, ['source'], undefined);
     if (source && source == 'nexus') {
@@ -37,5 +41,5 @@ export function getModLink(mod: IMod, gameFallback?: string): string {
             return 'about:blank';
         }
     }
-    return 'about:blank';
+    return '';
 }

@@ -18,7 +18,7 @@ Yes, and they're amazing! But they're a troubleshooting measure, first and forem
 
 No. Backup and restore of complex mod installations is a surprisingly hard problem, and it's not the problem that Showcase is trying to solve. As well as just being a very complicated thing to effectively backup, getting the level of detail required for reliable backup/restore requires a lot of game-specific logic that we just don't have here.
 
-You can, however, create a showcase and use that to rebuild your mods from scratch if you want.
+You can, however, create a showcase and use that to rebuild your mods from scratch if you want. You might also be interested in [this other community extension](https://www.nexusmods.com/site/mods/67).
 
 ### Why doesn't the showcase include plugins?
 

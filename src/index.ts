@@ -2,9 +2,9 @@ import { fs, log, util, selectors } from "vortex-api";
 import { IExtensionContext, IExtensionApi, IGame, IMod, IDialogResult, ICheckbox, IProfileMod } from 'vortex-api/lib/types/api';
 
 import { isSupported } from "./util";
-import { renderShowcase } from "./templating";
+import { renderShowcase, IShowcaseRenderer } from "./templating";
 import { rendererStore, registerShowcaseRenderer } from "./store";
-import { MarkdownRenderer, BBCodeRenderer } from "./renderers";
+import { MarkdownRenderer, BBCodeRenderer, CSVRenderer } from "./renderers";
 
 export type ModList = { [modId: string]: IMod; };
 export type ProfileMods = { [modId: string]: IProfileMod };
@@ -14,10 +14,15 @@ export const EXT_ID = 'vortex-showcase'
 
 //This is the main function Vortex will run when detecting the game extension. 
 function main(context: IExtensionContext) {
+    const registerRenderer = (key: string, rendererFn: () => IShowcaseRenderer) => {
+        context.api.store.dispatch(registerShowcaseRenderer(key, rendererFn));
+    }
     context.registerReducer(['session', 'showcase'], rendererStore);
+    // context.registerAPI('addShowcaseRenderer', (key: string, rendererFunc: () => IShowcaseRenderer) => registerRenderer(key, rendererFunc), {});
     context.once(() => {
         context.api.store.dispatch(registerShowcaseRenderer('Markdown', () => new MarkdownRenderer()));
         context.api.store.dispatch(registerShowcaseRenderer('BBCode', () => new BBCodeRenderer()));
+        context.api.store.dispatch(registerShowcaseRenderer('CSV', () => new CSVRenderer()));
     });
 
     context.registerAction('mod-icons', 101, 'layout-list', {}, 'Create Showcase', (instanceIds) => {
