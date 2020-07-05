@@ -12,7 +12,7 @@ The one advantage to Vortex Showcase's hilariously excessive over-engineering is
 
 In it's simplest form, a format is a function that takes a model (an `ITemplateModel` to be specific) and returns a string with the text content of the showcase. The complicated integration work of pulling mods and their metadata out of Vortex, as well as filtering out some stuff, is done by Showcase itself before the format renderers are called. For example, the two default renderers take this model and use Mustache.js to render templates with that model and return the generated string content.
 
-All showcase formats are loaded directly from Vortex's session state using the extension API, even the default ones. The Markdown and BBCode renderers are not hard-coded anywhere in, they're just registered as formats when the extension loads.
+All showcase formats are loaded directly from Vortex's session state using the extension API, even the default ones. The Markdown and BBCode renderers are not hard-coded anywhere, they're just registered as formats when the extension loads.
 
 ### Registering formats/renderers
 

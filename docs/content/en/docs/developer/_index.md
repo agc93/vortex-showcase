@@ -30,7 +30,7 @@ Note that all commits to, and pull requests against, the `master` branch are aut
 
 ## Feature Requests
 
-Showcase is a community project, currently built and maintained by a single non-developer. As such, feature requests will be accepted, but I can't provide any level of assurance that any requests will certainly be included. Also remember that we are limited to features that Vortex can reasonably support. Open [an issue on GitHub](https://github.com/agc93/beatvortex/issues/new) to discuss viability of any requests.
+Showcase is a community project, currently built and maintained by a single non-developer. As such, feature requests will be accepted, but I can't provide any level of assurance that any requests will certainly be included. Also remember that we are limited to features that Vortex can reasonably support. Open [an issue on GitHub](https://github.com/agc93/vortex-showcase/issues/new) to discuss viability of any requests.
 
 I'd also like to maintain Showcase as game-independent as possible, so please don't open issues/PRs for very game-specific functionality. Ideally, I'll be extending the API that Showcase provides in future to allow for enhancing game-specific capabilities but this is a long way off.
 
