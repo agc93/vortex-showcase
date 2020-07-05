@@ -14,4 +14,4 @@ To create a showcase with only some selected mods, select all the mods you want 
 
 ---
 
-Once you've started your showcase, you'll be prompted for a name for your showcase (this can be anything you like) and you can use the *Create ...* buttons on the dialog to create your showcase (defaults to Markdown). Once we've finished creating your showcase you'll see a notification appear and you can choose to copy the showcase to your clipboard or save it to a file on your PC.
+Once you've started your showcase, you'll be prompted for a name for your showcase (this can be anything you like) and what format you want your showcase in. Choose a format using the selections at the bottom of the dialog and click Create to start the showcase generation process. Once we've finished creating your showcase you'll see a notification appear and you can choose to copy the showcase to your clipboard or save it to a file on your PC.
