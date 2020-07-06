@@ -25,7 +25,7 @@ Once Vortex has restarted, switch back to your Mods screen and you should be rea
 
 If you can't install directly from the Extensions screen, you can instead install from the archive.
 
-1. Download the archive from [Nexus Mods](https://www.nexusmods.com/site/mods/133?tab=files) or [GitHub](https://https://github.com/agc93/vortex-showcase/releases)
+1. Download the archive from [Nexus Mods](https://www.nexusmods.com/site/mods/145?tab=files) or [GitHub](https://https://github.com/agc93/vortex-showcase/releases)
 1. Open the Extensions panel in Vortex
 1. Click on the *Drop File(s)* box in the corner and locate the archive you downloaded.
 1. Wait for the extension to install and **restart Vortex** when prompted.
@@ -38,7 +38,7 @@ Once Vortex has restarted, switch back to your Mods screen and you should be rea
 
 If you want to install the extension yourself, you will have to install the actual extension files manually. Make sure you close Vortex before proceeding.
 
-First, download the archive from [Nexus Mods](https://www.nexusmods.com/site/mods/133?tab=files) or [GitHub](https://https://github.com/agc93/vortex-showcase/actions).
+First, download the archive from [Nexus Mods](https://www.nexusmods.com/site/mods/145?tab=files) or [GitHub](https://https://github.com/agc93/vortex-showcase/actions).
 
 Next, unpack the archive to somewhere convenient. You should have a directory named `vortex-showcase` with a handful of files inside, including *at least* the following:
 

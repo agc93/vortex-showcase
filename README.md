@@ -10,7 +10,7 @@ Share your modding setups and build shareable mod lists directly from Vortex.
 
 This is a simple extension that lets you create "showcases" to share mod lists. You can create a showcase from your entire behemoth of a mod list, or just select individual mods to share with your fellow modders.
 
-There's plenty more information on what is and isn't available in [the docs](https://showcase.vortex.support), especially [the FAQ](https://showcase.vortex.support/docs/introduction/faq).
+There's plenty more information on what it is and isn't available in [the docs](https://showcase.vortex.support), especially [the FAQ](https://showcase.vortex.support/docs/introduction/faq).
 
 ## How to use it?
 
