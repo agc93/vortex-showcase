@@ -33,7 +33,9 @@ When a user creates a showcase, they are prompted with all the currently registe
 
 First, to build the model metadata, the `createModel` function for the current renderer is called for each mod. If you don't need to do any customisation or control how mod metadata is created, then just return `null`, and the extension will populate sane defaults (using `ModInfoDisplay.create`).
 
-Next, once the template model has been built, the extension will call the `createShowcase` function passing in the generated model and the extension API (for convenience). This is where the actual rendering happens, and this function should return the **final** string contents of the showcase, which the user can then copy/save
+Next, once the template model has been built, the extension will call the `createShowcase` function passing in the generated model and the extension API (for convenience). This is where the actual rendering happens, and this function should return the **final** string contents of the showcase, which the user can then copy/save.
+
+The final (and minor) function in a renderer is to return a file name in `createFileName` based on the user-provided title. This is essentially optional: if you return `null`/`undefined`, Vortex will prompt the user for a file name and location. You can, however, use this step to manually specify a name (as the Markdown renderer does), or only return a file extension (i.e. `return '*.csv'`) and Vortex will also prompt the user, but automatically use the right extension.
 
 ## Actions
 

@@ -7,7 +7,7 @@ import Mustache from "mustache";
 
 export class CSVRenderer implements IShowcaseRenderer {
     createFileName(title: string): string {
-        return util.deriveInstallName(title, undefined) + '.csv';
+        return '*.csv';
     }
     createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay {
         var model = ModInfoDisplay.create(api, mod);

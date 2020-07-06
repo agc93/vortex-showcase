@@ -51,7 +51,7 @@ export async function renderShowcase(api: IExtensionApi, gameTitle: string, show
                 {
                     title: 'Save to file',
                     action: (dismiss) => {
-                        saveToFile(output, showcaseTitle, selectedRenderer, dismiss);
+                        saveToFile(api, output, showcaseTitle, selectedRenderer, dismiss);
                     }
                 }
             ]
@@ -118,12 +118,32 @@ function getNotificationActions(api: IExtensionApi, rendererName: string, output
     
 }
 
-async function saveToFile(content: string, title: string, renderer: RendererRef, callback?: () => void) {
+async function saveToFile(api: IExtensionApi, content: string, title: string, renderer: RendererRef, callback?: () => void) {
     const showcasePath = path.join(util.getVortexPath('temp'), 'Showcase');
     await fs.ensureDirWritableAsync(showcasePath, () => Promise.resolve());
     var fileName = renderer.renderer.createFileName(title);
-    if (fileName == undefined) {
-        fileName = util.deriveInstallName(title, undefined) + '.txt';
+    if (fileName && path.basename(fileName, path.extname(fileName)) == '*') {
+        var filePath = await api.selectFile(
+            {
+                create: true, 
+                defaultPath: showcasePath, 
+                filters: [
+                    {name: renderer.name, extensions: [path.extname(fileName).replace(/^\./, '')]}
+                ]
+            });
+        if (filePath) {
+            fileName = path.relative(showcasePath, filePath);
+        } else {
+            fileName = util.deriveInstallName(title, undefined) + path.extname(fileName);
+        }
+    }
+    else if (!fileName) {
+        var filePath = await api.selectFile({create: true, defaultPath: showcasePath, title: 'Choose an output path'});
+        if (filePath) {
+            fileName = path.relative(showcasePath, filePath);
+        } else {
+            fileName = util.deriveInstallName(title, undefined) + '.txt';
+        }
     }
     const tmpPath = path.join(showcasePath, fileName);
     await fs.writeFileAsync(tmpPath, content);
