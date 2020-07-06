@@ -1,6 +1,6 @@
 {
   "name": "vortex-showcase",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An extension for Vortex for building and sharing mod lists",
   "main": "./dist/index.js",
   "scripts": {
