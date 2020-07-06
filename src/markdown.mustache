@@ -7,7 +7,7 @@
 {{#mods}}
 #### {{name}} {{#version}}v{{.}}{{/version}}
 
-Installed {{{installed}}} from {{{source}}}
+Installed {{{installed}}} {{#source}}from {{{.}}}{{/source}}
 
 {{#image}}
 <img src="{{.}}" alt="mod-image" width="200" height="200"/>

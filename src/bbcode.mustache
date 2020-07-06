@@ -5,9 +5,9 @@
 [size=18]{{{game}}} Mods[/size]
 
 {{#mods}}
-[b]{{name}} v{{version}}
+[b]{{name}} v{{version}}[/b]
 
-[quote]Installed {{{installed}}} from {{{source}}}
+[quote]Installed {{{installed}}} {{#source}}from {{{.}}}{{/source}}
 Created by {{author}} for {{gameId}} ({{category}})
 [/quote]
 
