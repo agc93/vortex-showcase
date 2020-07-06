@@ -6,6 +6,9 @@ import { fs } from "vortex-api";
 import Mustache from "mustache";
 
 export class BBCodeRenderer implements IShowcaseRenderer {
+    createFileName(title: string): string {
+        return undefined;
+    }
     createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay {
         var model = ModInfoDisplay.create(api, mod);
         if (model.source && model.source == 'nexus' && model.link) {

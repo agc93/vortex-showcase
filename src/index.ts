@@ -1,9 +1,10 @@
 import { fs, log, util, selectors } from "vortex-api";
-import { IExtensionContext, IExtensionApi, IGame, IMod, IDialogResult, ICheckbox, IProfileMod } from 'vortex-api/lib/types/api';
+import path = require('path');
+import { IExtensionContext, IExtensionApi, IGame, IMod, IDialogResult, ICheckbox, IProfileMod, IDialogAction } from 'vortex-api/lib/types/api';
 
 import { isSupported } from "./util";
-import { renderShowcase, IShowcaseRenderer } from "./templating";
-import { rendererStore, registerShowcaseRenderer } from "./store";
+import { renderShowcase, IShowcaseRenderer, writeToClipboard } from "./templating";
+import { rendererStore, registerShowcaseRenderer, registerShowcaseAction } from "./store";
 import { MarkdownRenderer, BBCodeRenderer, CSVRenderer } from "./renderers";
 
 export type ModList = { [modId: string]: IMod; };
@@ -18,17 +19,20 @@ function main(context: IExtensionContext) {
         context.api.store.dispatch(registerShowcaseRenderer(key, rendererFn));
     }
     context.registerReducer(['session', 'showcase'], rendererStore);
+    // ↘ this isn't in 1.2.17, you idiot
     // context.registerAPI('addShowcaseRenderer', (key: string, rendererFunc: () => IShowcaseRenderer) => registerRenderer(key, rendererFunc), {});
     context.once(() => {
+        util.installIconSet('showcase', path.join(__dirname, 'icons.svg'));
         context.api.store.dispatch(registerShowcaseRenderer('Markdown', () => new MarkdownRenderer()));
         context.api.store.dispatch(registerShowcaseRenderer('BBCode', () => new BBCodeRenderer()));
         context.api.store.dispatch(registerShowcaseRenderer('CSV', () => new CSVRenderer()));
+        context.api.store.dispatch(registerShowcaseAction('Copy', writeToClipboard));
     });
 
-    context.registerAction('mod-icons', 101, 'layout-list', {}, 'Create Showcase', (instanceIds) => {
+    context.registerAction('mod-icons', 101, 'showcase', {}, 'Create Showcase', (instanceIds) => {
         createShowcase(context.api, instanceIds);
     }, isSupported);
-    context.registerAction('mods-multirow-actions', 400, 'layout-list', {}, 'Create Showcase', (instanceIds) => {
+    context.registerAction('mods-multirow-actions', 400, 'showcase', {}, 'Create Showcase', (instanceIds) => {
         createShowcase(context.api, instanceIds);
     }, isSupported);
 
@@ -61,19 +65,33 @@ async function createShowcase(api: IExtensionApi, modIds: string[]) {
             });
             return;
         }
-        var renderers = util.getSafe(api.getState().session, ['showcase', 'renderers'], {});
-        var result: IDialogResult = await api.showDialog(
+        var titleResult: IDialogResult = await api.showDialog(
             'question',
             'Create Mod Showcase',
             {
-                text: `You are about to create a showcase based on ${includedMods.length} mods. Enter a name for your new showcase, and choose a format`,
+                text: `You are about to create a showcase based on ${includedMods.length} mods. First, enter a name for your new showcase below`,
                 input: [
                     {
                         id: 'name',
                         value: '',
                         label: 'Name'
                     }
-                ],
+                ]
+            },
+            [
+                { label: 'Cancel' },
+                { label: 'Continue', default: true }
+            ]);
+        if (titleResult.action == 'Cancel') {
+            return;
+        }
+        var userTitle = titleResult.input.name;
+        var renderers = util.getSafe(api.getState().session, ['showcase', 'renderers'], {});
+        var result: IDialogResult = await api.showDialog(
+            'question',
+            'Create Mod Showcase',
+            {
+                text: 'You can create your showcase in a number of different formats, depending on how or where you want to share your mod list. Choose a format below and click Create to start generating your showcase.',
                 choices:
                     Object.keys(renderers).map(r => {
                         return {
@@ -85,7 +103,7 @@ async function createShowcase(api: IExtensionApi, modIds: string[]) {
             },
             [
                 { label: 'Cancel' },
-                { label: 'Create' }
+                { label: 'Create', default: true }
             ]);
         if (result.action == 'Cancel') {
             return;
@@ -94,7 +112,7 @@ async function createShowcase(api: IExtensionApi, modIds: string[]) {
             var selection = Object.keys(result.input).find(ri => result.input[ri]);
             log('debug', 'activating showcase renderer', { selection });
             var renderer = renderers[selection]()
-            renderShowcase(api, currentGame.name, result.input.name, includedMods, renderer)
+            renderShowcase(api, currentGame.name, userTitle, includedMods, {name: selection, renderer})
         }
     }
 }

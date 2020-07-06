@@ -6,7 +6,7 @@
   "scripts": {
     "webpack": "node ./node_modules/webpack/bin/webpack --config webpack.config.js --display-error-details --progress --profile --color",
     "bundle7z": "7z a -t7z game-cncremastered.7z .\\dist\\index.js .\\dist\\info.json .\\gameart.png",
-    "build": "npm run webpack && extractInfo && copyfiles -f ./src/*.mustache ./src/*.scss ./dist/"
+    "build": "npm run webpack && extractInfo && copyfiles -f ./src/*.mustache ./src/*.svg ./dist/"
   },
   "config": {
     "game": "Mod Showcase"
