@@ -20,7 +20,7 @@
 &lt;h3 id="semi-automatic-installation">Semi-Automatic Installation&lt;/h3>
 &lt;p>If you can't install directly from the Extensions screen, you can instead install from the archive.&lt;/p>
 &lt;ol>
-&lt;li>Download the archive from &lt;a href="https://www.nexusmods.com/site/mods/133?tab=files">Nexus Mods&lt;/a> or &lt;a href="https://https://github.com/agc93/vortex-showcase/releases">GitHub&lt;/a>&lt;/li>
+&lt;li>Download the archive from &lt;a href="https://www.nexusmods.com/site/mods/145?tab=files">Nexus Mods&lt;/a> or &lt;a href="https://https://github.com/agc93/vortex-showcase/releases">GitHub&lt;/a>&lt;/li>
 &lt;li>Open the Extensions panel in Vortex&lt;/li>
 &lt;li>Click on the &lt;em>Drop File(s)&lt;/em> box in the corner and locate the archive you downloaded.&lt;/li>
 &lt;li>Wait for the extension to install and &lt;strong>restart Vortex&lt;/strong> when prompted.&lt;/li>
@@ -31,7 +31,7 @@
 &lt;p>Only attempt this if you &lt;em>absolutely&lt;/em> have to. It becomes much harder to debug and much harder to upgrade.&lt;/p>
 &lt;/blockquote>
 &lt;p>If you want to install the extension yourself, you will have to install the actual extension files manually. Make sure you close Vortex before proceeding.&lt;/p>
-&lt;p>First, download the archive from &lt;a href="https://www.nexusmods.com/site/mods/133?tab=files">Nexus Mods&lt;/a> or &lt;a href="https://https://github.com/agc93/vortex-showcase/actions">GitHub&lt;/a>.&lt;/p>
+&lt;p>First, download the archive from &lt;a href="https://www.nexusmods.com/site/mods/145?tab=files">Nexus Mods&lt;/a> or &lt;a href="https://https://github.com/agc93/vortex-showcase/actions">GitHub&lt;/a>.&lt;/p>
 &lt;p>Next, unpack the archive to somewhere convenient. You should have a directory named &lt;code>vortex-showcase&lt;/code> with a handful of files inside, including &lt;em>at least&lt;/em> the following:&lt;/p>
 &lt;ul>
 &lt;li>info.json&lt;/li>
