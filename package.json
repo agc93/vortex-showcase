@@ -31,7 +31,7 @@
     "axios": "^0.19.2",
     "bluebird": "^3.5.5",
     "copyfiles": "^2.3.0",
-    "electron": "4.2.4",
+    "electron": "7.2.4",
     "i18next": "^17.0.4",
     "mustache": "^4.0.1",
     "react": "^16.8.6",
