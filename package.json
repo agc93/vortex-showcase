@@ -1,6 +1,6 @@
 {
   "name": "vortex-showcase",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An extension for Vortex for building and sharing mod lists",
   "main": "./dist/index.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "axios": "^0.19.2",
     "bluebird": "^3.5.5",
     "copyfiles": "^2.3.0",
-    "electron": "4.2.4",
+    "electron": "8.3.0",
     "i18next": "^17.0.4",
     "mustache": "^4.0.1",
     "react": "^16.8.6",
