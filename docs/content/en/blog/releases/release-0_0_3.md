@@ -1,9 +1,9 @@
 ---
 title: "Initial Release"
-linkTitle: "Release 0.0.2"
+linkTitle: "Release 0.0.3"
 date: 2020-07-07
 aliases:
-  - /updates/v0.0.2
+  - /updates/v0.0.3
 description: >
   The initial pre-alpha of Vortex Showcase
 ---
