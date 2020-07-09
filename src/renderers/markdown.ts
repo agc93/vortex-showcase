@@ -11,8 +11,8 @@ export class MarkdownRenderer implements IShowcaseRenderer {
     }
     createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay {
         var model = ModInfoDisplay.create(api, mod);
-        if (model.source && model.source == 'nexus' && model.link) {
-            model.source = `[Nexus Mods](${model.link})`;
+        if (model.source && model.link) {
+            model.source = `[${model.source == 'nexus' ? 'Nexus Mods' : model.source}](${model.link})`;
         }
         return model;
     }

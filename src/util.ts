@@ -1,4 +1,4 @@
-import { IState, IMod } from "vortex-api/lib/types/api";
+import { IState, IMod, IExtensionApi } from "vortex-api/lib/types/api";
 import { selectors, util } from 'vortex-api';
 
 export function toFriendlyName(str: string): string {
@@ -31,6 +31,10 @@ export function getModName(mod: IMod, nameFallback?: string): string {
 }
 
 export function getModLink(mod: IMod, gameFallback?: string): string {
+    var homepage = util.getSafe(mod.attributes, ['homepage'], undefined);
+    if (homepage) {
+        return homepage;
+    }
     var source = util.getSafe(mod.attributes, ['source'], undefined);
     if (source && source == 'nexus') {
         try {
@@ -42,4 +46,18 @@ export function getModLink(mod: IMod, gameFallback?: string): string {
         }
     }
     return '';
+}
+
+export function getModType(mod: IMod): string {
+    var modType = util.getModType(mod.type);
+    return toTitleCase(modType?.options?.name ?? modType?.typeId ?? 'default');
+}
+
+export function toTitleCase(str: string) {
+    return str.replace(
+        /\w\S*/g,
+        function(txt: string) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+    );
 }

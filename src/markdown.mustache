@@ -13,11 +13,16 @@ Installed {{{installed}}} {{#source}}from {{{.}}}{{/source}}
 <img src="{{.}}" alt="mod-image" width="200" height="200"/>
 {{/image}}
 
-> by {{author}} for {{gameId}}
+> by {{author}} for {{gameId}} ({{{type}}})
 
 > Category: {{category}}
 
 {{{description}}}
 
+{{#notes}}
+<hr />
+
+**Notes**: {{{.}}}
+{{/notes}}
 
 {{/mods}}

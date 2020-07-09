@@ -1,6 +1,6 @@
 import { IMod, IExtensionApi } from "vortex-api/lib/types/api";
 import { util, selectors } from "vortex-api";
-import { getCategoryName, formatInstallTime, getModLink, getModName } from "./util";
+import { getCategoryName, formatInstallTime, getModLink, getModName, getModType } from "./util";
 
 export class ModInfoDisplay {
     name: string;
@@ -15,6 +15,7 @@ export class ModInfoDisplay {
     installed?: string;
     source: string;
     type: string;
+    notes: string;
 
     static create(api: IExtensionApi, mod: IMod): ModInfoDisplay {
         var game = util.getSafe(mod.attributes, ['downloadGame'], selectors.activeGameId(api.getState()))
@@ -29,7 +30,8 @@ export class ModInfoDisplay {
             installed: formatInstallTime(util.getSafe(mod.attributes, ['installTime'], undefined)),
             source: util.getSafe(mod.attributes, ['source'], 'unknown source'),
             link: getModLink(mod, game),
-            type: mod.type
+            type: getModType(mod),
+            notes: util.getSafe(mod.attributes, ['notes'], undefined),
         }
     }
 }
