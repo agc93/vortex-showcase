@@ -1,4 +1,19 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vortex Showcase – Releases</title><link>/blog/releases/</link><description>Recent content in Releases on Vortex Showcase</description><generator>Hugo -- gohugo.io</generator><atom:link href="/blog/releases/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Initial Release</title><link>/blog/2020/07/07/initial-release/</link><pubDate>Tue, 07 Jul 2020 00:00:00 +0000</pubDate><guid>/blog/2020/07/07/initial-release/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vortex Showcase – Releases</title><link>/blog/releases/</link><description>Recent content in Releases on Vortex Showcase</description><generator>Hugo -- gohugo.io</generator><atom:link href="/blog/releases/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Initial Release (Hotfix 4)</title><link>/blog/2020/07/09/initial-release-hotfix-4/</link><pubDate>Thu, 09 Jul 2020 00:00:00 +0000</pubDate><guid>/blog/2020/07/09/initial-release-hotfix-4/</guid><description>
+&lt;div class="pageinfo pageinfo-primary">
+&lt;p>This release is now available &lt;a href="https://www.nexusmods.com/site/mods/145?tab=files">on Nexus Mods&lt;/a>.&lt;/p>
+&lt;/div>
+&lt;p>This release is a bugfix update to improve showcase generation:&lt;/p>
+&lt;ul>
+&lt;li>The link used for the mod source will now default to the &lt;code>homePage&lt;/code> attribute
+&lt;ul>
+&lt;li>This should fix games where their Vortex names and Nexus names don't match&lt;/li>
+&lt;li>Most notably, this was the case for Skyrim SE (&lt;code>skyrimse&lt;/code>/&lt;code>skyrimspecialedition&lt;/code>)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Markdown reports will now include the mod type, and any notes you have added to your mods&lt;/li>
+&lt;li>The template model now also supports mod notes&lt;/li>
+&lt;/ul>
+&lt;p>This release is an alpha release of the Vortex Showcase extension! Get started with your own mod showcases using the action buttons in your Mods page, and make sure to report any &lt;a href="https://github.com/agc93/vortex-showcase">issues you find&lt;/a> or &lt;a href="https://www.nexusmods.com/site/mods/145?tab=posts">give any feedback&lt;/a>.&lt;/p></description></item><item><title>Blog: Initial Release</title><link>/blog/2020/07/07/initial-release/</link><pubDate>Tue, 07 Jul 2020 00:00:00 +0000</pubDate><guid>/blog/2020/07/07/initial-release/</guid><description>
 &lt;div class="pageinfo pageinfo-primary">
 &lt;p>This release is now available &lt;a href="https://www.nexusmods.com/site/mods/145?tab=files">on Nexus Mods&lt;/a>.&lt;/p>
 &lt;/div>
