@@ -9,7 +9,7 @@ import { rendererStore } from "./store";
 export interface IShowcaseRenderer {
     createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay
     createShowcase(api: IExtensionApi, model: ITemplateModel): Promise<string>;
-    createFileName(title: string): string|undefined;
+    createFileName?(title: string): string|undefined;
 }
 
 export interface IShowcaseAction {
@@ -29,6 +29,7 @@ const knownExtensions = {
 }
 
 export async function renderShowcase(api: IExtensionApi, gameTitle: string, showcaseTitle: string, mods: IMod[], selectedRenderer: RendererRef) {
+    api.dismissNotification('n-showcase-created');
     var renderer = selectedRenderer.renderer;
     var user = util.getSafe(api.getState().persistent, ['nexus', 'userInfo', 'name'], undefined) ?? 'an unknown user';
     var modInfo = mods.map(m => renderer.createModel(api, m));
@@ -54,7 +55,8 @@ export async function renderShowcase(api: IExtensionApi, gameTitle: string, show
                         saveToFile(api, output, showcaseTitle, selectedRenderer, dismiss);
                     }
                 }
-            ]
+            ],
+            id: 'n-showcase-created'
         })
     }
 }
@@ -119,9 +121,12 @@ function getNotificationActions(api: IExtensionApi, rendererName: string, output
 }
 
 async function saveToFile(api: IExtensionApi, content: string, title: string, renderer: RendererRef, callback?: () => void) {
+    var fileName: string;
     const showcasePath = path.join(util.getVortexPath('temp'), 'Showcase');
     await fs.ensureDirWritableAsync(showcasePath, () => Promise.resolve());
-    var fileName = renderer.renderer.createFileName(title);
+    if (renderer.renderer.createFileName) {
+        fileName = renderer.renderer.createFileName(title);
+    }
     if (fileName && path.basename(fileName, path.extname(fileName)) == '*') {
         var filePath = await api.selectFile(
             {

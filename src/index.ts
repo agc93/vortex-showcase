@@ -5,7 +5,7 @@ import { IExtensionContext, IExtensionApi, IGame, IMod, IDialogResult, ICheckbox
 import { isSupported } from "./util";
 import { renderShowcase, IShowcaseRenderer, writeToClipboard } from "./templating";
 import { rendererStore, registerShowcaseRenderer, registerShowcaseAction } from "./store";
-import { MarkdownRenderer, BBCodeRenderer, CSVRenderer } from "./renderers";
+import { MarkdownRenderer, BBCodeRenderer, CSVRenderer, DiscordRenderer } from "./renderers";
 
 export type ModList = { [modId: string]: IMod; };
 export type ProfileMods = { [modId: string]: IProfileMod };
@@ -26,6 +26,7 @@ function main(context: IExtensionContext) {
         context.api.store.dispatch(registerShowcaseRenderer('Markdown', () => new MarkdownRenderer()));
         context.api.store.dispatch(registerShowcaseRenderer('BBCode', () => new BBCodeRenderer()));
         context.api.store.dispatch(registerShowcaseRenderer('CSV', () => new CSVRenderer()));
+        context.api.store.dispatch(registerShowcaseRenderer('Discord', () => new DiscordRenderer()));
         context.api.store.dispatch(registerShowcaseAction('Copy', writeToClipboard));
     });
 
