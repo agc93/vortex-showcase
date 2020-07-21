@@ -8,6 +8,10 @@ description: >
 
 The one advantage to Vortex Showcase's hilariously excessive over-engineering is that it has ended up specifically designed to make adding new formats or actions very simple.
 
+{{% pageinfo %}}
+This API (while functional and supported) will be phased out in future releases. See the [notes below on Vortex changes](#upcoming-vortex-changes) for more detail.
+{{% /pageinfo %}}
+
 ## Showcase Formats
 
 In it's simplest form, a format is a function that takes a model (an `ITemplateModel` to be specific) and returns a string with the text content of the showcase. The complicated integration work of pulling mods and their metadata out of Vortex, as well as filtering out some stuff, is done by Showcase itself before the format renderers are called. For example, the two default renderers take this model and use Mustache.js to render templates with that model and return the generated string content.
@@ -40,3 +44,17 @@ The final (and minor) function in a renderer is to return a file name in `create
 ## Actions
 
 There's the beginnings of an API to take certain actions after a showcase is generated, but this is not finalised so I have not included it here. This API is intended for things like uploading certain showcase formats, or letting users directly share a showcase through other means.
+
+## Upcoming Vortex Changes
+
+Upcoming releases of Vortex (likely in 1.3) will introduce a new API for extensions to expose functions on the `IExtensionApi` object for *other* extensions to use. Ideally this means that you can author your own extensions to add renderers or actions just as easily as Showcase does:
+
+```ts
+context.requireExtension('Vortex Showcase');
+context.once(() => {
+  context.api.addShowcaseRenderer('My Renderer', () => new MyAwesomeRenderer());
+  context.api.addShowcaseAction('Do a thing', doTheThingAction);
+})
+```
+
+However, this isn't there yet. Vortex hasn't fully integrated the changes that we'd need for that, and the extension will need to be updated to match. If you really want to add a renderer/action right now, open a PR with your implementation, but if you're comfortable waiting a bit, I'd recommend waiting for this API to be ready so you can package and manage your own features.

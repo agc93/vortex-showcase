@@ -1,9 +1,9 @@
-import { fs, log, util, selectors } from "vortex-api";
+import { fs, log, util, selectors, actions } from "vortex-api";
 import path = require('path');
 import { IExtensionContext, IExtensionApi, IGame, IMod, IDialogResult, ICheckbox, IProfileMod, IDialogAction } from 'vortex-api/lib/types/api';
 
 import { isSupported } from "./util";
-import { renderShowcase, IShowcaseRenderer, writeToClipboard } from "./templating";
+import { renderShowcase, IShowcaseRenderer, writeToClipboard, IShowcaseAction } from "./templating";
 import { rendererStore, registerShowcaseRenderer, registerShowcaseAction } from "./store";
 import { MarkdownRenderer, BBCodeRenderer, CSVRenderer, DiscordRenderer } from "./renderers";
 
@@ -18,9 +18,13 @@ function main(context: IExtensionContext) {
     const registerRenderer = (key: string, rendererFn: () => IShowcaseRenderer) => {
         context.api.store.dispatch(registerShowcaseRenderer(key, rendererFn));
     }
+    const registerAction = (key: string, action: IShowcaseAction) => {
+        context.api.store.dispatch(registerShowcaseAction(key, action));
+    }
     context.registerReducer(['session', 'showcase'], rendererStore);
     // ↘ this isn't in 1.2.17, you idiot
-    // context.registerAPI('addShowcaseRenderer', (key: string, rendererFunc: () => IShowcaseRenderer) => registerRenderer(key, rendererFunc), {});
+    // context.registerAPI('addShowcaseRenderer', (key: string, rendererFunc: () => IShowcaseRenderer) => registerRenderer(key, rendererFunc), {minArguments: 2});
+    // context.registerAPI('addShowcaseAction', (key: string, action: IShowcaseAction) => registerAction(key, action), {minArguments: 2});
     context.once(() => {
         util.installIconSet('showcase', path.join(__dirname, 'icons.svg'));
         context.api.store.dispatch(registerShowcaseRenderer('Markdown', () => new MarkdownRenderer()));
