@@ -4,7 +4,7 @@ import { IExtensionContext, IExtensionApi, IGame, IMod, IDialogResult, ICheckbox
 
 import { isSupported } from "./util";
 import { renderShowcase, IShowcaseRenderer, writeToClipboard, IShowcaseAction } from "./templating";
-import { rendererStore, registerShowcaseRenderer, registerShowcaseAction } from "./store";
+import { rendererStore, registerShowcaseRenderer, registerShowcaseAction, updateMRU } from "./store";
 import { MarkdownRenderer, BBCodeRenderer, CSVRenderer, DiscordRenderer } from "./renderers";
 
 export type ModList = { [modId: string]: IMod; };
@@ -92,6 +92,7 @@ async function createShowcase(api: IExtensionApi, modIds: string[]) {
         }
         var userTitle = titleResult.input.name;
         var renderers = util.getSafe(api.getState().session, ['showcase', 'renderers'], {});
+        var mru = util.getSafe(api.getState().session, ['showcase', 'mru'], undefined);
         var result: IDialogResult = await api.showDialog(
             'question',
             'Create Mod Showcase',
@@ -102,7 +103,7 @@ async function createShowcase(api: IExtensionApi, modIds: string[]) {
                         return {
                             id: r,
                             text: r,
-                            value: Object.keys(renderers).indexOf(r) == 0
+                            value:  mru ? r == mru : Object.keys(renderers).indexOf(r) == 0
                         } as ICheckbox
                     })
             },
@@ -116,6 +117,9 @@ async function createShowcase(api: IExtensionApi, modIds: string[]) {
         if (result.action == 'Create') {
             var selection = Object.keys(result.input).find(ri => result.input[ri]);
             log('debug', 'activating showcase renderer', { selection });
+            try {
+                api.store.dispatch(updateMRU(selection));
+            } catch {}
             var renderer = renderers[selection]()
             renderShowcase(api, currentGame.name, userTitle, includedMods, {name: selection, renderer})
         }

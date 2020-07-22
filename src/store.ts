@@ -12,6 +12,9 @@ export const registerShowcaseRenderer =
 export const registerShowcaseAction =
     createAction('SC_ADD_ACTION', (name: string, action: IShowcaseAction) => ({name, action}));
 
+export const updateMRU =
+    createAction('SC_UPDATE_MRU', (name: string) => (name));
+
 /**
  * reducer for extension settings
  */
@@ -22,10 +25,14 @@ export const rendererStore: IReducerSpec = {
         },
         [registerShowcaseAction as any]: (state, payload: ({name: string, action: IShowcaseAction})) => {
             return util.setSafe(state, ['actions', payload.name], payload.action);
+        },
+        [updateMRU as any]: (state, payload: string) => {
+            return util.setSafe(state, ['mru'], payload);
         }
     },
     defaults: {
         renderers: {},
-        actions: {}
+        actions: {},
+        mru: undefined
     }
 };
