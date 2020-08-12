@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "npm run webpack && extractInfo && copyfiles -f ./src/*.mustache ./src/*.svg ./dist/"
+		},
+		{
+			"type": "npm",
+			"script": "build",
+			// "group": "build",
+			"problemMatcher": [],
+			"label": "npm: api typings",
+			"path": "./api/",
+			"detail": "Rebuild API typings"
+		}
+	]
+}

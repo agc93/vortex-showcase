@@ -1,38 +1,55 @@
-import { fs, util, log, selectors } from "vortex-api";
+import { fs, util, log } from "vortex-api";
 import { IExtensionApi, IMod, INotificationAction, IDialogResult, ICheckbox } from "vortex-api/lib/types/api";
 import { ITemplateModel, ModInfoDisplay } from "./modinfo";
-import Mustache from "mustache";
-import { remote } from "electron";
 import path = require('path');
-import { rendererStore } from "./store";
 
+/**
+ * @public
+ */
 export interface IShowcaseRenderer {
     createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay
     createShowcase(api: IExtensionApi, model: ITemplateModel): Promise<string>;
     createFileName?(title: string): string|undefined;
+    isEnabled?(gameId: string): boolean;
 }
 
+/**
+ * @public
+ */
 export interface IShowcaseAction {
-    (renderer: string, output: string): Promise<void>
+    runAction(renderer: string, output: string): Promise<void>;
+    isEnabled?(renderer: string): boolean;
 }
 
 type RendererRef = {name: string, renderer: IShowcaseRenderer};
-
-export function writeToClipboard(renderer: string, output: string): Promise<void> {
-    remote.clipboard.writeText(output);
-    return;
-}
+type ActionRef = {name: string, action: IShowcaseAction};
 
 const knownExtensions = {
     'Markdown': '.md',
     'CSV': '.csv'
 }
 
+/**
+ * Renders a showcase.
+ * 
+ * @param api The extension API.
+ * @param gameTitle The readable game name.
+ * @param showcaseTitle The showcase title.
+ * @param mods The selected/included mods.
+ * @param selectedRenderer Reference for the selected format renderer.
+ * @internal
+ */
 export async function renderShowcase(api: IExtensionApi, gameTitle: string, showcaseTitle: string, mods: IMod[], selectedRenderer: RendererRef) {
     api.dismissNotification('n-showcase-created');
     var renderer = selectedRenderer.renderer;
     var user = util.getSafe(api.getState().persistent, ['nexus', 'userInfo', 'name'], undefined) ?? 'an unknown user';
-    var modInfo = mods.map(m => renderer.createModel(api, m));
+    var modInfo = mods.map(m => {
+        var customModel = renderer.createModel(api, m);
+        var defaultModel = ModInfoDisplay.create(api, m);
+        return api == null
+            ? defaultModel
+            : {...defaultModel, ...customModel}
+    });
     log('debug', `generated ${modInfo.length} models from ${mods.length} included mods`);
     var model: ITemplateModel = {
         game: gameTitle,
@@ -61,19 +78,24 @@ export async function renderShowcase(api: IExtensionApi, gameTitle: string, show
     }
 }
 
-function getActions(api: IExtensionApi): {[key: string]: IShowcaseAction} {
-    var actions = util.getSafe(api.getState().session, ['showcase', 'actions'], {});
-    return actions;
+function getActions(api: IExtensionApi, renderer: string): ActionRef[] {
+    var actions = util.getSafe<{[key: string]: (() => IShowcaseAction)}>(api.getState().session, ['showcase', 'actions'], undefined);
+    var availableActions = actions == undefined
+        ? []
+        : Object.keys(actions)
+            .map(a => ({name: a, action: actions[a]()}))
+            .filter(a => a.action.isEnabled ? a.action.isEnabled(renderer) : true);
+    return availableActions;
 }
 
 function getNotificationActions(api: IExtensionApi, rendererName: string, output: string): INotificationAction[] {
-    var allSessionActions = getActions(api);
-    if (Object.keys(allSessionActions).length < 3) {
-        var sessionActions = Object.keys(allSessionActions).map(a => {
+    var allSessionActions = getActions(api, rendererName);
+    if ((Object.keys(allSessionActions).length < 3) && (allSessionActions.every(a => a.name.length < 8))) {
+        var sessionActions = allSessionActions.map(a => {
             return {
-                title: a,
+                title: a.name,
                 action: (dismiss) => {
-                    allSessionActions[a](rendererName, output);
+                    a.action.runAction(rendererName, output);
                     dismiss();
                 }
             } as INotificationAction
@@ -90,10 +112,10 @@ function getNotificationActions(api: IExtensionApi, rendererName: string, output
                         {
                             text: 'Your showcase has successfully been generated! As well as saving it to a file for later, you can also use any of the extra actions below to share your showcase more easily',
                             checkboxes: 
-                                Object.keys(allSessionActions).map(a => {
+                                allSessionActions.map(a => {
                                     return {
-                                        id: a,
-                                        text: a,
+                                        id: a.name,
+                                        text: a.name,
                                     } as ICheckbox
                                 })
                         }, [
@@ -105,9 +127,9 @@ function getNotificationActions(api: IExtensionApi, rendererName: string, output
                         if (result.action == 'Cancel') {
                             return;
                         } else {
-                            var enabledActions = Object.keys(allSessionActions).filter(a => result.input[a]);
+                            var enabledActions = allSessionActions.filter(a => result.input[a.name]);
                             for (const action of enabledActions) {
-                                allSessionActions[action](rendererName, output);
+                                action.action.runAction(rendererName, output);
                             }
                         };
                         dismiss();
@@ -117,7 +139,6 @@ function getNotificationActions(api: IExtensionApi, rendererName: string, output
         ];
         return dialogActions;
     }
-    
 }
 
 async function saveToFile(api: IExtensionApi, content: string, title: string, renderer: RendererRef, callback?: () => void) {

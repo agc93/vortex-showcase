@@ -118,3 +118,5 @@ dist
 src/*.js
 
 apidoc/**
+# api/lib/**
+lib/**

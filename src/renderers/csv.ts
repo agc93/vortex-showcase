@@ -5,6 +5,10 @@ import path = require('path');
 import { fs, util } from "vortex-api";
 import Mustache from "mustache";
 
+/**
+ * Format renderer for CSV mod lists
+ * @internal
+ */
 export class CSVRenderer implements IShowcaseRenderer {
     createFileName(title: string): string {
         return '*.csv';
