@@ -2,6 +2,10 @@ import { IShowcaseRenderer } from "../templating";
 import { IMod, IExtensionApi } from "vortex-api/lib/types/api";
 import { ModInfoDisplay, ITemplateModel } from "../modinfo";
 
+/**
+ * Format renderer for a Discord message.
+ * @internal
+ */
 export class DiscordRenderer implements IShowcaseRenderer {
     createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay {
         var model = ModInfoDisplay.create(api, mod);

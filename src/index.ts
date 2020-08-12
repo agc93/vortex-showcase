@@ -1,16 +1,36 @@
 import { fs, log, util, selectors, actions } from "vortex-api";
 import path = require('path');
-import { IExtensionContext, IExtensionApi, IGame, IMod, IDialogResult, ICheckbox, IProfileMod, IDialogAction } from 'vortex-api/lib/types/api';
+import { IExtensionContext, IExtensionApi, IGame, IMod, IDialogResult, ICheckbox, IProfileMod, IDialogAction, IState } from 'vortex-api/lib/types/api';
 
-import { isSupported } from "./util";
-import { renderShowcase, IShowcaseRenderer, writeToClipboard, IShowcaseAction } from "./templating";
+import { getEnabledMods } from "./util";
+import { renderShowcase, IShowcaseRenderer, IShowcaseAction } from "./templating";
 import { rendererStore, registerShowcaseRenderer, registerShowcaseAction, updateMRU } from "./store";
 import { MarkdownRenderer, BBCodeRenderer, CSVRenderer, DiscordRenderer } from "./renderers";
+import { ClipboardAction } from "./actions";
 
+/**
+ * @internal
+ */
 export type ModList = { [modId: string]: IMod; };
+/**
+ * @internal
+ */
 export type ProfileMods = { [modId: string]: IProfileMod };
 
+type RendererStore = {[key: string]: () => IShowcaseRenderer};
 
+/**
+ * @public
+ */
+export type showcaseAPI = {
+    addShowcaseRenderer: (key: string, rendererFunc: () => IShowcaseRenderer) => void;
+    addShowcaseAction: (key: string, actionFn: () => IShowcaseAction) => void;
+    getEnabledMods: (gameId: string) => IMod[];
+};
+
+/**
+ * @internal
+ */
 export const EXT_ID = 'vortex-showcase'
 
 //This is the main function Vortex will run when detecting the game extension. 
@@ -18,28 +38,29 @@ function main(context: IExtensionContext) {
     const registerRenderer = (key: string, rendererFn: () => IShowcaseRenderer) => {
         context.api.store.dispatch(registerShowcaseRenderer(key, rendererFn));
     }
-    const registerAction = (key: string, action: IShowcaseAction) => {
-        context.api.store.dispatch(registerShowcaseAction(key, action));
+    const registerAction = (key: string, actionFn: () => IShowcaseAction) => {
+        context.api.store.dispatch(registerShowcaseAction(key, actionFn));
     }
     context.registerReducer(['session', 'showcase'], rendererStore);
     // ↘ this isn't in 1.2.17, you idiot
-    // context.registerAPI('addShowcaseRenderer', (key: string, rendererFunc: () => IShowcaseRenderer) => registerRenderer(key, rendererFunc), {minArguments: 2});
-    // context.registerAPI('addShowcaseAction', (key: string, action: IShowcaseAction) => registerAction(key, action), {minArguments: 2});
+    context.registerAPI('addShowcaseRenderer', (key: string, rendererFunc: () => IShowcaseRenderer) => registerRenderer(key, rendererFunc), {minArguments: 2});
+    context.registerAPI('addShowcaseAction', (key: string, actionFn: () => IShowcaseAction) => registerAction(key, actionFn), {minArguments: 2});
+    context.registerAPI('getEnabledMods', (gameId: string) => getEnabledMods(context.api.getState(), gameId), {minArguments: 1} )
     context.once(() => {
         util.installIconSet('showcase', path.join(__dirname, 'icons.svg'));
         context.api.store.dispatch(registerShowcaseRenderer('Markdown', () => new MarkdownRenderer()));
         context.api.store.dispatch(registerShowcaseRenderer('BBCode', () => new BBCodeRenderer()));
         context.api.store.dispatch(registerShowcaseRenderer('CSV', () => new CSVRenderer()));
         context.api.store.dispatch(registerShowcaseRenderer('Discord', () => new DiscordRenderer()));
-        context.api.store.dispatch(registerShowcaseAction('Copy', writeToClipboard));
+        context.api.store.dispatch(registerShowcaseAction('Copy', () => new ClipboardAction()));
     });
 
     context.registerAction('mod-icons', 101, 'showcase', {}, 'Create Showcase', (instanceIds) => {
         createShowcase(context.api, instanceIds);
-    }, isSupported);
+    }, () => true);
     context.registerAction('mods-multirow-actions', 400, 'showcase', {}, 'Create Showcase', (instanceIds) => {
         createShowcase(context.api, instanceIds);
-    }, isSupported);
+    }, () => true);
 
     // addProfileFeatures(context);
     return true
@@ -54,9 +75,7 @@ async function createShowcase(api: IExtensionApi, modIds: string[]) {
         if (!modIds || modIds.length == 0) {
             // I'm not sure when this happens tbh
             // huh. turns out the top menu bar action does this. TIL.
-            var profile = selectors.activeProfile(api.getState());
-            var profileMods: ProfileMods = util.getSafe(profile, ['modState'], {});
-            var enabledMods = Object.keys(profileMods).filter(pm => profileMods[pm].enabled).map(epm => mods[epm]);
+            var enabledMods = getEnabledMods(api.getState(), currentGameId);
             includedMods = enabledMods;
         } else {
             log('debug', 'starting showcase generation', { mods: modIds });
@@ -91,7 +110,12 @@ async function createShowcase(api: IExtensionApi, modIds: string[]) {
             return;
         }
         var userTitle = titleResult.input.name;
-        var renderers = util.getSafe(api.getState().session, ['showcase', 'renderers'], {});
+        var allRenderers = util.getSafe<RendererStore>(api.getState().session, ['showcase', 'renderers'], {});
+        var rendererNames = Object.keys(allRenderers);
+        var renderers: {[key: string]: IShowcaseRenderer} = rendererNames.map(rk =>  ({name: rk, renderer: allRenderers[rk]()})).filter(r => r.renderer.isEnabled ? r.renderer.isEnabled(currentGameId) : true).reduce((prev, curr) => {
+            prev[curr.name] = curr.renderer;
+            return prev;
+        }, {});
         var mru = util.getSafe(api.getState().session, ['showcase', 'mru'], undefined);
         var result: IDialogResult = await api.showDialog(
             'question',
@@ -120,7 +144,7 @@ async function createShowcase(api: IExtensionApi, modIds: string[]) {
             try {
                 api.store.dispatch(updateMRU(selection));
             } catch {}
-            var renderer = renderers[selection]()
+            var renderer = renderers[selection]
             renderShowcase(api, currentGame.name, userTitle, includedMods, {name: selection, renderer})
         }
     }

@@ -1,7 +1,11 @@
 import { IMod, IExtensionApi } from "vortex-api/lib/types/api";
 import { util, selectors } from "vortex-api";
-import { getCategoryName, formatInstallTime, getModLink, getModName, getModType } from "./util";
+import { formatInstallTime, getModLink, getModType } from "./util";
+import { getModName, getCategoryName } from "vortex-ext-common";
 
+/**
+ * @public
+ */
 export class ModInfoDisplay {
     name: string;
     gameId: string;
@@ -16,6 +20,7 @@ export class ModInfoDisplay {
     source: string;
     type: string;
     notes: string;
+    meta: any;
 
     static create(api: IExtensionApi, mod: IMod): ModInfoDisplay {
         var game = util.getSafe(mod.attributes, ['downloadGame'], selectors.activeGameId(api.getState()))
@@ -32,15 +37,33 @@ export class ModInfoDisplay {
             link: getModLink(mod, game),
             type: getModType(mod),
             notes: util.getSafe(mod.attributes, ['notes'], undefined),
+            meta: {}
         }
     }
 }
 
+/**
+ * 
+ * @param api 
+ * @param mod 
+ * 
+ * @public
+ */
+export function getDefaultModInfo(api: IExtensionApi, mod: IMod): ModInfoDisplay {
+    return ModInfoDisplay.create(api, mod);
+}
+
+/**
+ * @public
+ */
 export class NexusInfo {
     id: number;
     link: string;
 }
 
+/**
+ * @public
+ */
 export interface ITemplateModel {
     title: string;
     user: string;

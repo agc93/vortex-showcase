@@ -1,6 +1,6 @@
 {
   "name": "vortex-showcase",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "An extension for Vortex for building and sharing mod lists",
   "main": "./dist/index.js",
   "scripts": {
@@ -34,7 +34,7 @@
     "typedoc": "^0.17.8",
     "typescript": "^3.9.6",
     "vortex-api": "github:Nexus-Mods/vortex-api",
-    "vortex-ext-common": "^0.0.6",
+    "vortex-ext-common": "^0.0.8",
     "webpack": "^4.35.0",
     "webpack-cli": "^3.3.4"
   },

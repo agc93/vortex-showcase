@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "es2019",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noImplicitAny": false,
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "rootDir": "../src",
+        "outDir": "./lib",
+        "sourceMap": false,
+        "jsx": "react",
+        "emitDeclarationOnly": true,
+        "declaration": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "stripInternal": true,
+        "types": []
+    },
+    "files": [
+        "../src/api.ts"
+    ]
+}

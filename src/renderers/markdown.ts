@@ -5,6 +5,10 @@ import path = require('path');
 import { fs, util } from "vortex-api";
 import Mustache from "mustache";
 
+/**
+ * Format renderer for a Markdown mod list/report.
+ * @internal
+ */
 export class MarkdownRenderer implements IShowcaseRenderer {
     createFileName(title: string): string {
         return util.deriveInstallName(title, undefined) + '.md';

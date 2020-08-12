@@ -5,6 +5,10 @@ import path = require('path');
 import { fs } from "vortex-api";
 import Mustache from "mustache";
 
+/**
+ * Format renderer for BBCode output
+ * @internal
+ */
 export class BBCodeRenderer implements IShowcaseRenderer {
     createFileName(title: string): string {
         return undefined;
