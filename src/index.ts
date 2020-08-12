@@ -25,7 +25,8 @@ type RendererStore = {[key: string]: () => IShowcaseRenderer};
 export type showcaseAPI = {
     addShowcaseRenderer: (key: string, rendererFunc: () => IShowcaseRenderer) => void;
     addShowcaseAction: (key: string, actionFn: () => IShowcaseAction) => void;
-    getEnabledMods: (gameId: string) => IMod[];
+    // getEnabledMods: (gameId: string) => IMod[];
+    createShowcase: (mods?: string[], format?: string, action?: string) => Promise<void>;
 };
 
 /**
@@ -45,7 +46,8 @@ function main(context: IExtensionContext) {
     // ↘ this isn't in 1.2.17, you idiot
     context.registerAPI('addShowcaseRenderer', (key: string, rendererFunc: () => IShowcaseRenderer) => registerRenderer(key, rendererFunc), {minArguments: 2});
     context.registerAPI('addShowcaseAction', (key: string, actionFn: () => IShowcaseAction) => registerAction(key, actionFn), {minArguments: 2});
-    context.registerAPI('getEnabledMods', (gameId: string) => getEnabledMods(context.api.getState(), gameId), {minArguments: 1} )
+    // context.registerAPI('getEnabledMods', (gameId: string) => getEnabledMods(context.api.getState(), gameId), {minArguments: 1} )
+    context.registerAPI('createShowcase', (mods?: string[], format?: string, action?: string) => createShowcase(context.api, mods, format, action), {minArguments: 0});
     context.once(() => {
         util.installIconSet('showcase', path.join(__dirname, 'icons.svg'));
         context.api.store.dispatch(registerShowcaseRenderer('Markdown', () => new MarkdownRenderer()));
@@ -53,6 +55,9 @@ function main(context: IExtensionContext) {
         context.api.store.dispatch(registerShowcaseRenderer('CSV', () => new CSVRenderer()));
         context.api.store.dispatch(registerShowcaseRenderer('Discord', () => new DiscordRenderer()));
         context.api.store.dispatch(registerShowcaseAction('Copy', () => new ClipboardAction()));
+        context.api.events.on('create-showcase', (mods?: string[], format?: string, action?: string) => {
+            createShowcase(context.api, mods, format, action);
+        });
     });
 
     context.registerAction('mod-icons', 101, 'showcase', {}, 'Create Showcase', (instanceIds) => {
@@ -61,26 +66,20 @@ function main(context: IExtensionContext) {
     context.registerAction('mods-multirow-actions', 400, 'showcase', {}, 'Create Showcase', (instanceIds) => {
         createShowcase(context.api, instanceIds);
     }, () => true);
-
     // addProfileFeatures(context);
     return true
 }
 
-async function createShowcase(api: IExtensionApi, modIds: string[]) {
+async function createShowcase(api: IExtensionApi, modIds: string[], format?:string, action?:string) {
     var includedMods: IMod[] = [];
+    modIds = modIds ?? [];
     var currentGame = selectors.currentGame(api.getState()) as IGame;
     var currentGameId = currentGame?.id;
+    var mods = util.getSafe(api.getState().persistent, ['mods', currentGameId], {} as ModList);
     if (currentGame && currentGameId) {
-        var mods = util.getSafe(api.getState().persistent, ['mods', currentGameId], {} as ModList);
-        if (!modIds || modIds.length == 0) {
-            // I'm not sure when this happens tbh
-            // huh. turns out the top menu bar action does this. TIL.
-            var enabledMods = getEnabledMods(api.getState(), currentGameId);
-            includedMods = enabledMods;
-        } else {
-            log('debug', 'starting showcase generation', { mods: modIds });
-            includedMods = modIds.filter(i => Object.keys(mods).indexOf(i) != -1).map(id => mods[id]);
-        }
+        var includedMods = modIds.length > 0
+            ? modIds.filter(i => Object.keys(mods).indexOf(i) != -1).map(id => mods[id])
+            : getEnabledMods(api.getState(), currentGameId);
         if (includedMods.length == 0) {
             api.sendNotification({
                 title: 'No mods included!',
@@ -116,40 +115,46 @@ async function createShowcase(api: IExtensionApi, modIds: string[]) {
             prev[curr.name] = curr.renderer;
             return prev;
         }, {});
-        var mru = util.getSafe(api.getState().session, ['showcase', 'mru'], undefined);
-        var result: IDialogResult = await api.showDialog(
-            'question',
-            'Create Mod Showcase',
-            {
-                text: 'You can create your showcase in a number of different formats, depending on how or where you want to share your mod list. Choose a format below and click Create to start generating your showcase.',
-                choices:
-                    Object.keys(renderers).map(r => {
-                        return {
-                            id: r,
-                            text: r,
-                            value:  mru ? r == mru : Object.keys(renderers).indexOf(r) == 0
-                        } as ICheckbox
-                    })
-            },
-            [
-                { label: 'Cancel' },
-                { label: 'Create', default: true }
-            ]);
-        if (result.action == 'Cancel') {
-            return;
+        var renderer: {name: string, renderer: IShowcaseRenderer};
+        if (format == null) {
+            var mru = util.getSafe(api.getState().session, ['showcase', 'mru'], undefined);
+            var result: IDialogResult = await api.showDialog(
+                'question',
+                'Create Mod Showcase',
+                {
+                    text: 'You can create your showcase in a number of different formats, depending on how or where you want to share your mod list. Choose a format below and click Create to start generating your showcase.',
+                    choices:
+                        Object.keys(renderers).map(r => {
+                            return {
+                                id: r,
+                                text: r,
+                                value:  mru ? r == mru : Object.keys(renderers).indexOf(r) == 0
+                            } as ICheckbox
+                        })
+                },
+                [
+                    { label: 'Cancel' },
+                    { label: 'Create', default: true }
+                ]);
+            if (result.action == 'Cancel') {
+                return;
+            }
+            if (result.action == 'Create') {
+                var selection = Object.keys(result.input).find(ri => result.input[ri]);
+                log('debug', 'activating showcase renderer', { selection });
+                try {
+                    api.store.dispatch(updateMRU(selection));
+                } catch {}
+                renderer = {name: selection, renderer: renderers[selection]};
+                
+            }
+        } else if (typeof format == "string" && format != null) {
+            var rendererKey = Object.keys(renderers).find(rk => rk.toLowerCase() == format.toLowerCase());
+            renderer = {name: rendererKey, renderer: renderers[rendererKey]};
         }
-        if (result.action == 'Create') {
-            var selection = Object.keys(result.input).find(ri => result.input[ri]);
-            log('debug', 'activating showcase renderer', { selection });
-            try {
-                api.store.dispatch(updateMRU(selection));
-            } catch {}
-            var renderer = renderers[selection]
-            renderShowcase(api, currentGame.name, userTitle, includedMods, {name: selection, renderer})
-        }
+        renderShowcase(api, currentGame.name, userTitle, includedMods, renderer, action)
     }
 }
-
 
 module.exports = {
     default: main,

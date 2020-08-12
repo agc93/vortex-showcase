@@ -39,7 +39,7 @@ const knownExtensions = {
  * @param selectedRenderer Reference for the selected format renderer.
  * @internal
  */
-export async function renderShowcase(api: IExtensionApi, gameTitle: string, showcaseTitle: string, mods: IMod[], selectedRenderer: RendererRef) {
+export async function renderShowcase(api: IExtensionApi, gameTitle: string, showcaseTitle: string, mods: IMod[], selectedRenderer: RendererRef, forceAction?: string) {
     api.dismissNotification('n-showcase-created');
     var renderer = selectedRenderer.renderer;
     var user = util.getSafe(api.getState().persistent, ['nexus', 'userInfo', 'name'], undefined) ?? 'an unknown user';
@@ -58,23 +58,31 @@ export async function renderShowcase(api: IExtensionApi, gameTitle: string, show
         mods: modInfo
     }
     var output = await renderer.createShowcase(api, model);
-    var actions = getNotificationActions(api, selectedRenderer.name, output);
-    if (output && output.length > 0) {
-        api.sendNotification({
-            type: 'success',
-            message: 'Successfully generated report',
-            title: 'Showcase Generated!',
-            actions: [
-                ...actions,
-                {
-                    title: 'Save to file',
-                    action: (dismiss) => {
-                        saveToFile(api, output, showcaseTitle, selectedRenderer, dismiss);
+    if (forceAction == null) {
+        var notifActions = getNotificationActions(api, selectedRenderer.name, output);
+        if (output && output.length > 0) {
+            api.sendNotification({
+                type: 'success',
+                message: 'Successfully generated report',
+                title: 'Showcase Generated!',
+                actions: [
+                    ...notifActions,
+                    {
+                        title: 'Save to file',
+                        action: (dismiss) => {
+                            saveToFile(api, output, showcaseTitle, selectedRenderer, dismiss);
+                        }
                     }
-                }
-            ],
-            id: 'n-showcase-created'
-        })
+                ],
+                id: 'n-showcase-created'
+            })
+        }
+    } else {
+        var allActions = getActions(api, selectedRenderer.name);
+        var override = allActions.find(a => a.name.toLowerCase() == forceAction.toLowerCase());
+        if (override) {
+            override.action.runAction(selectedRenderer.name, output);
+        }
     }
 }
 
