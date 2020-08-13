@@ -1,6 +1,6 @@
 {
     "name": "vortex-showcase-api",
-    "version": "0.0.6",
+    "version": "0.1.0",
     "description": "Library exporting Showcase types for extensions",
     "main": "lib/index.js",
     "scripts": {
