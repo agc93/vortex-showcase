@@ -1,4 +1,16 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vortex Showcase – Updates</title><link>/blog/</link><description>Recent content in Updates on Vortex Showcase</description><generator>Hugo -- gohugo.io</generator><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Initial Release (Hotfix 4)</title><link>/blog/2020/07/09/initial-release-hotfix-4/</link><pubDate>Thu, 09 Jul 2020 00:00:00 +0000</pubDate><guid>/blog/2020/07/09/initial-release-hotfix-4/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vortex Showcase – Updates</title><link>/blog/</link><description>Recent content in Updates on Vortex Showcase</description><generator>Hugo -- gohugo.io</generator><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Alpha 1 Release</title><link>/blog/2020/08/13/alpha-1-release/</link><pubDate>Thu, 13 Aug 2020 00:00:00 +0000</pubDate><guid>/blog/2020/08/13/alpha-1-release/</guid><description>
+&lt;div class="pageinfo pageinfo-primary">
+&lt;p>This release is now available &lt;a href="https://www.nexusmods.com/site/mods/145?tab=files">on Nexus Mods&lt;/a>.&lt;/p>
+&lt;/div>
+&lt;p>This release is a major upgrade for Showcase behind-the-scenes, but you shouldn't notice any major changes!&lt;/p>
+&lt;ul>
+&lt;li>Finalised the extensions API: we now expose a handful of function on the &lt;code>IExtensionApi&lt;/code> for other extensions to use&lt;/li>
+&lt;li>Made it possible for formats and actions to only be shown when supported, to trim down on the clutter&lt;/li>
+&lt;li>Format selection will now remember your most recently used format and pre-select it&lt;/li>
+&lt;li>New Discord format for sharing smaller mod lists in a Discord message&lt;/li>
+&lt;/ul>
+&lt;p>Extension authors might want to check the &lt;a href="../docs/developer/extensions">developer docs&lt;/a> for detail on the new extensions API.&lt;/p>
+&lt;p>This release marks the first full alpha of the Vortex Showcase extension, so we've bumped the version up to 0.1.0! Get started with your own mod showcases using the action buttons in your Mods page, and make sure to report any &lt;a href="https://github.com/agc93/vortex-showcase">issues you find&lt;/a> or &lt;a href="https://www.nexusmods.com/site/mods/145?tab=posts">give any feedback&lt;/a>.&lt;/p></description></item><item><title>Blog: Initial Release (Hotfix 4)</title><link>/blog/2020/07/09/initial-release-hotfix-4/</link><pubDate>Thu, 09 Jul 2020 00:00:00 +0000</pubDate><guid>/blog/2020/07/09/initial-release-hotfix-4/</guid><description>
 &lt;div class="pageinfo pageinfo-primary">
 &lt;p>This release is now available &lt;a href="https://www.nexusmods.com/site/mods/145?tab=files">on Nexus Mods&lt;/a>.&lt;/p>
 &lt;/div>
