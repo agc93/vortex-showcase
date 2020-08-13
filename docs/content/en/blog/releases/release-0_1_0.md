@@ -19,6 +19,8 @@ This release is a major upgrade for Showcase behind-the-scenes, but you shouldn'
 - Format selection will now remember your most recently used format and pre-select it
 - New Discord format for sharing smaller mod lists in a Discord message
 
+This version *requires* Vortex 1.3+, older Vortex versions can continue to use 0.0.4.
+
 Extension authors might want to check the [developer docs](/docs/developer/extensions) for detail on the new extensions API.
 
 This release marks the first full alpha of the Vortex Showcase extension, so we've bumped the version up to 0.1.0! Get started with your own mod showcases using the action buttons in your Mods page, and make sure to report any [issues you find](https://github.com/agc93/vortex-showcase) or [give any feedback](https://www.nexusmods.com/site/mods/145?tab=posts).
