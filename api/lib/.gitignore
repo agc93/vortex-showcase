@@ -1,6 +1,7 @@
 # Ignore everything in this directory
 *
 # Except this file
+!.npmignore
 !.gitignore
 
 ## The contents of this folder should be auto-generated
