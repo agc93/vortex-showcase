@@ -4,25 +4,30 @@
 
 ## {{{game}}} Mods
 
-{{#mods}}
-#### {{name}} {{#version}}v{{.}}{{/version}}
+<hr />
+<hr />
 
-Installed {{{installed}}} {{#source}}from {{{.}}}{{/source}}
+{{#mods}}
+### {{name}} {{#version}}{{.}}{{/version}}
+
+Installed {{{installed}}} {{#source}}from {{{.}}} {{/source}}{{#category}}({{.}}) {{/category}}
 
 {{#image}}
-<img src="{{.}}" alt="mod-image" width="200" height="200"/>
+<img src="{{.}}" alt="mod-image" height="350" />
 {{/image}}
 
-> by {{author}} for {{gameId}} ({{{type}}})
-
-> Category: {{category}}
+> By {{author}} for {{gameName}} ({{{type}}})
 
 {{{description}}}
 
 {{#notes}}
-<hr />
 
 **Notes**: {{{.}}}
+
 {{/notes}}
+
+
+
+<hr />
 
 {{/mods}}

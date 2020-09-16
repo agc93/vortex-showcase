@@ -17,7 +17,7 @@ export class DiscordRenderer implements IShowcaseRenderer {
     createShowcase(api: IExtensionApi, model: ITemplateModel): Promise<string> {
         api.dismissNotification('showcase-d-maxlength');
         var modText = model.mods.map(m => {
-            return `${m.name} \`${m.version ? m.version.startsWith('v') ? m.version : ('v' + m.version) : '?'}\` [${m.type && m.type.toLowerCase() != 'default' ? m.type + '/' : ''}${m.source}]`
+            return `${m.name} \`${m.version ? m.version : '?'}\` [${m.type && m.type.toLowerCase() != 'default' ? m.type + '/' : ''}${m.source}]`
         });
         var showcaseText = `**${model.title}** (_${model.user}_):`
         var counter = 0;

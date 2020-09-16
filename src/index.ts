@@ -6,7 +6,7 @@ import { getEnabledMods } from "./util";
 import { renderShowcase, IShowcaseRenderer, IShowcaseAction } from "./templating";
 import { rendererStore, registerShowcaseRenderer, registerShowcaseAction, updateMRU } from "./store";
 import { MarkdownRenderer, BBCodeRenderer, CSVRenderer, DiscordRenderer } from "./renderers";
-import { ClipboardAction } from "./actions";
+import { ClipboardAction, UploadAction } from "./actions";
 
 /**
  * @internal
@@ -47,7 +47,7 @@ function main(context: IExtensionContext) {
     context.registerAPI('addShowcaseRenderer', (key: string, rendererFunc: () => IShowcaseRenderer) => registerRenderer(key, rendererFunc), {minArguments: 2});
     context.registerAPI('addShowcaseAction', (key: string, actionFn: () => IShowcaseAction) => registerAction(key, actionFn), {minArguments: 2});
     // context.registerAPI('getEnabledMods', (gameId: string) => getEnabledMods(context.api.getState(), gameId), {minArguments: 1} )
-    context.registerAPI('createShowcase', (mods?: string[], format?: string, action?: string) => createShowcase(context.api, mods, format, action), {minArguments: 0});
+    context.registerAPI('createShowcase', (mods?: string[], format?: string, action?: string, title?: string) => createShowcase(context.api, mods, format, action), {minArguments: 0});
     context.once(() => {
         util.installIconSet('showcase', path.join(__dirname, 'icons.svg'));
         context.api.store.dispatch(registerShowcaseRenderer('Markdown', () => new MarkdownRenderer()));
@@ -55,6 +55,7 @@ function main(context: IExtensionContext) {
         context.api.store.dispatch(registerShowcaseRenderer('CSV', () => new CSVRenderer()));
         context.api.store.dispatch(registerShowcaseRenderer('Discord', () => new DiscordRenderer()));
         context.api.store.dispatch(registerShowcaseAction('Copy', () => new ClipboardAction()));
+        context.api.store.dispatch(registerShowcaseAction('Upload', () => new UploadAction(context.api)));
         context.api.events.on('create-showcase', (mods?: string[], format?: string, action?: string) => {
             createShowcase(context.api, mods, format, action);
         });
