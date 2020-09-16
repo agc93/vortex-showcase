@@ -1,0 +1,11 @@
+Game: site
+ModId: 145
+FileName: Vortex Showcase Extension
+PreviousFile: auto
+FileDescription: |-
+  Requires Vortex ~ 1.3.0
+
+  Download and install using the Extensions pane in Vortex.
+  To manually install, extract the zip to %APPDATA%\Vortex\plugins\vortex-showcase.
+
+  Read about the changes in this release at showcase.vortex.support/updates/
