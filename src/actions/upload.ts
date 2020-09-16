@@ -2,9 +2,9 @@ import { util } from 'vortex-api';
 import { IShowcaseAction } from "../templating";
 import { IExtensionApi } from 'vortex-api/lib/types/api';
 import { remote } from 'electron';
-import { PrivateBinClient, getPasteUrl } from "@agc93/privatebin";
+import { PrivateBinClient, getPasteUrl, Expiry } from "@agc93/privatebin";
 
-const PRIVATEBIN_HOST = 'showcase.report';
+const PrivateBinServer = { host: 'showcase.report', expiry: '3month'};
 
 export class UploadAction implements IShowcaseAction {
     private _api: IExtensionApi;
@@ -20,8 +20,8 @@ export class UploadAction implements IShowcaseAction {
             message: 'Uploading your showcase...'
         });
         try {
-            var client = new PrivateBinClient(PRIVATEBIN_HOST);
-            var result = await client.uploadContent(output, {uploadFormat: renderer == "Markdown" ? 'markdown' : 'plaintext', expiry: '1month'});
+            var client = new PrivateBinClient(PrivateBinServer.host);
+            var result = await client.uploadContent(output, {uploadFormat: renderer == "Markdown" ? 'markdown' : 'plaintext', expiry: PrivateBinServer.expiry as Expiry});
             this._api.dismissNotification(progress);
             if (!result || !result.success) {
                 this._api.showErrorNotification('Failed to upload showcase!', null, {allowReport: false});
