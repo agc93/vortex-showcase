@@ -9,6 +9,7 @@ import { getModName, getCategoryName } from "vortex-ext-common";
 export class ModInfoDisplay {
     name: string;
     gameId: string;
+    gameName: string;
     description: string;
     image?: string;
     nexus?: NexusInfo;
@@ -23,15 +24,23 @@ export class ModInfoDisplay {
     meta: any;
 
     static create(api: IExtensionApi, mod: IMod): ModInfoDisplay {
+        const getGameName = (gameId: string) => {
+            var knownGames = util.getSafe<{name: string; id: string}[]>(api.getState().session, ['gameMode', 'known'], []);
+            var knownGame = knownGames.find(g => g.id == gameId);
+            return knownGame ? knownGame.name : gameId;
+        }
         var game = util.getSafe(mod.attributes, ['downloadGame'], selectors.activeGameId(api.getState()))
+        var gameName = getGameName(game);
+        var rawVersion = util.getSafe<string>(mod.attributes, ['version'], undefined)
         return {
             description: util.getSafe(mod.attributes, ['shortDescription'], util.getSafe(mod.attributes, ['description'], '')),
             gameId: game,
+            gameName: gameName,
             name: getModName(mod, ''),
             image: util.getSafe(mod.attributes, ['pictureUrl'], undefined),
             category: getCategoryName(util.getSafe(mod.attributes, ['category'], undefined), api.getState()) ?? 'Unknown',
             author: util.getSafe(mod.attributes, ['author'], 'Unknown Author'),
-            version: util.getSafe(mod.attributes, ['version'], undefined),
+            version: rawVersion ? rawVersion.match(/^[A-Za-z]+/) ? rawVersion : `v${rawVersion}` : '',
             installed: formatInstallTime(util.getSafe(mod.attributes, ['installTime'], undefined)),
             source: util.getSafe(mod.attributes, ['source'], 'unknown source'),
             link: getModLink(mod, game),

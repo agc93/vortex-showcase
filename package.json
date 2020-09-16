@@ -14,6 +14,7 @@
     "url": "https://github.com/agc93/vortex-showcase.git"
   },
   "devDependencies": {
+    "@agc93/privatebin": "^0.0.2",
     "@types/i18next": "^12.1.0",
     "@types/mustache": "^4.0.1",
     "@types/node": "^12.0.10",
