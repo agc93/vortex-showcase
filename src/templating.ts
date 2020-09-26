@@ -43,13 +43,13 @@ export async function renderShowcase(api: IExtensionApi, gameTitle: string, show
     api.dismissNotification('n-showcase-created');
     var renderer = selectedRenderer.renderer;
     var user = util.getSafe(api.getState().persistent, ['nexus', 'userInfo', 'name'], undefined) ?? 'an unknown user';
-    var modInfo = mods.map(m => {
+    var modInfo = mods.filter(im => im).map(m => {
         var customModel = renderer.createModel(api, m);
         var defaultModel = ModInfoDisplay.create(api, m);
         return api == null
             ? defaultModel
             : {...defaultModel, ...customModel}
-    });
+    }).filter(mod => mod);
     log('debug', `generated ${modInfo.length} models from ${mods.length} included mods`);
     var model: ITemplateModel = {
         game: gameTitle,
@@ -93,6 +93,7 @@ function getActions(api: IExtensionApi, renderer: string): ActionRef[] {
         : Object.keys(actions)
             .map(a => ({name: a, action: actions[a]()}))
             .filter(a => a.action.isEnabled ? a.action.isEnabled(renderer) : true);
+    log('debug', 'loaded available actions from session state', {actions: availableActions.length});
     return availableActions;
 }
 

@@ -78,9 +78,10 @@ async function createShowcase(api: IExtensionApi, modIds: string[], format?:stri
     var currentGameId = currentGame?.id;
     var mods = util.getSafe(api.getState().persistent, ['mods', currentGameId], {} as ModList);
     if (currentGame && currentGameId) {
-        var includedMods = modIds.length > 0
+        var includedMods = (modIds.length > 0
             ? modIds.filter(i => Object.keys(mods).indexOf(i) != -1).map(id => mods[id])
-            : getEnabledMods(api.getState(), currentGameId);
+            : getEnabledMods(api.getState(), currentGameId)).filter(m => m);
+        log('debug', 'showcase creation started', {mods: (includedMods || []).length});
         if (includedMods.length == 0) {
             api.sendNotification({
                 title: 'No mods included!',
@@ -153,6 +154,13 @@ async function createShowcase(api: IExtensionApi, modIds: string[], format?:stri
             var rendererKey = Object.keys(renderers).find(rk => rk.toLowerCase() == format.toLowerCase());
             renderer = {name: rendererKey, renderer: renderers[rendererKey]};
         }
+        log('debug', 'starting showcase renderer', {
+            game: currentGame.name, 
+            title: userTitle, 
+            mods: includedMods.length, 
+            renderer: renderer?.name, 
+            action: action || 'none'
+        });
         renderShowcase(api, currentGame.name, userTitle, includedMods, renderer, action)
     }
 }
