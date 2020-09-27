@@ -78,10 +78,14 @@ async function createShowcase(api: IExtensionApi, modIds: string[], format?:stri
     var currentGameId = currentGame?.id;
     var mods = util.getSafe(api.getState().persistent, ['mods', currentGameId], {} as ModList);
     if (currentGame && currentGameId) {
-        var includedMods = (modIds.length > 0
+        var availableMods = modIds.length > 0
             ? modIds.filter(i => Object.keys(mods).indexOf(i) != -1).map(id => mods[id])
-            : getEnabledMods(api.getState(), currentGameId)).filter(m => m);
-        log('debug', 'showcase creation started', {mods: (includedMods || []).length});
+            : getEnabledMods(api.getState(), currentGameId);
+        var includedMods = availableMods.filter(m => m);
+        if (availableMods.length != includedMods.length) {
+            log('warn', 'Showcase mod loading found undefined mod entries', {undefineds: availableMods.filter(x => !includedMods.includes(x)).length});
+        }
+        log('debug', 'showcase creation started', {mods: (includedMods || []).length, available: availableMods.length});
         if (includedMods.length == 0) {
             api.sendNotification({
                 title: 'No mods included!',
@@ -117,6 +121,7 @@ async function createShowcase(api: IExtensionApi, modIds: string[], format?:stri
             prev[curr.name] = curr.renderer;
             return prev;
         }, {});
+        log('debug', 'loaded available renderers from session state', {renderers: Object.keys(renderers).length});
         var renderer: {name: string, renderer: IShowcaseRenderer};
         if (format == null) {
             var mru = util.getSafe(api.getState().session, ['showcase', 'mru'], undefined);
@@ -151,6 +156,7 @@ async function createShowcase(api: IExtensionApi, modIds: string[], format?:stri
                 
             }
         } else if (typeof format == "string" && format != null) {
+            log('debug', 'Output format specified at creation', {requestedFormat: format});
             var rendererKey = Object.keys(renderers).find(rk => rk.toLowerCase() == format.toLowerCase());
             renderer = {name: rendererKey, renderer: renderers[rendererKey]};
         }
