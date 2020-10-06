@@ -24,7 +24,7 @@
     "@types/redux-thunk": "^2.1.0",
     "bluebird": "^3.5.5",
     "copyfiles": "^2.3.0",
-    "electron": "8.3.0",
+    "electron": "8.5.1",
     "i18next": "^17.0.4",
     "mustache": "^4.0.1",
     "react": "^16.8.6",
