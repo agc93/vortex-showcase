@@ -25,4 +25,5 @@ export class BBCodeRenderer implements IShowcaseRenderer {
         var output = Mustache.render(template, model);
         return Promise.resolve(output);
     }
+    allowSave() { return false;}
 }

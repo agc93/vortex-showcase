@@ -5,7 +5,7 @@ import { IExtensionContext, IExtensionApi, IGame, IMod, IDialogResult, ICheckbox
 import { getEnabledMods } from "./util";
 import { renderShowcase, IShowcaseRenderer, IShowcaseAction } from "./templating";
 import { rendererStore, registerShowcaseRenderer, registerShowcaseAction, updateMRU } from "./store";
-import { MarkdownRenderer, BBCodeRenderer, CSVRenderer, DiscordRenderer } from "./renderers";
+import { MarkdownRenderer, BBCodeRenderer, PlainTextRenderer } from "./renderers";
 import { ClipboardAction, UploadAction } from "./actions";
 
 /**
@@ -52,8 +52,7 @@ function main(context: IExtensionContext) {
         util.installIconSet('showcase', path.join(__dirname, 'icons.svg'));
         context.api.store.dispatch(registerShowcaseRenderer('Markdown', () => new MarkdownRenderer()));
         context.api.store.dispatch(registerShowcaseRenderer('BBCode', () => new BBCodeRenderer()));
-        context.api.store.dispatch(registerShowcaseRenderer('CSV', () => new CSVRenderer()));
-        context.api.store.dispatch(registerShowcaseRenderer('Discord', () => new DiscordRenderer()));
+        context.api.store.dispatch(registerShowcaseRenderer('Plain Text', () => new PlainTextRenderer()));
         context.api.store.dispatch(registerShowcaseAction('Copy', () => new ClipboardAction()));
         context.api.store.dispatch(registerShowcaseAction('Upload', () => new UploadAction(context.api)));
         context.api.events.on('create-showcase', (mods?: string[], format?: string, action?: string) => {

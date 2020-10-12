@@ -11,6 +11,7 @@ export interface IShowcaseRenderer {
     createShowcase(api: IExtensionApi, model: ITemplateModel): Promise<string>;
     createFileName?(title: string): string|undefined;
     isEnabled?(gameId: string): boolean;
+    allowSave?(): boolean;
 }
 
 /**
@@ -23,11 +24,6 @@ export interface IShowcaseAction {
 
 type RendererRef = {name: string, renderer: IShowcaseRenderer};
 type ActionRef = {name: string, action: IShowcaseAction};
-
-const knownExtensions = {
-    'Markdown': '.md',
-    'CSV': '.csv'
-}
 
 /**
  * Renders a showcase.
@@ -60,19 +56,21 @@ export async function renderShowcase(api: IExtensionApi, gameTitle: string, show
     var output = await renderer.createShowcase(api, model);
     if (forceAction == null) {
         var notifActions = getNotificationActions(api, selectedRenderer.name, output);
+        if (!renderer.allowSave || (renderer.allowSave && renderer.allowSave())) {
+            notifActions.push({
+                title: 'Save to file',
+                action: (dismiss) => {
+                    saveToFile(api, output, showcaseTitle, selectedRenderer, dismiss);
+                }
+            });
+        }
         if (output && output.length > 0) {
             api.sendNotification({
                 type: 'success',
                 message: 'Successfully generated report',
                 title: 'Showcase Generated!',
                 actions: [
-                    ...notifActions,
-                    {
-                        title: 'Save to file',
-                        action: (dismiss) => {
-                            saveToFile(api, output, showcaseTitle, selectedRenderer, dismiss);
-                        }
-                    }
+                    ...notifActions
                 ],
                 id: 'n-showcase-created'
             })

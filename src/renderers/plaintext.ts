@@ -6,23 +6,25 @@ import { fs, util } from "vortex-api";
 import Mustache from "mustache";
 
 /**
- * Format renderer for CSV mod lists
+ * Format renderer for BBCode output
  * @internal
  */
-export class CSVRenderer implements IShowcaseRenderer {
+export class PlainTextRenderer implements IShowcaseRenderer {
     createFileName(title: string): string {
-        return '*.csv';
+        return `${util.deriveInstallName(title, undefined).substr(0, 64)}.txt`;
     }
     createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay {
         var model = ModInfoDisplay.create(api, mod);
-        model.description = model.description.replace(/"/g, "'");
-        if (model.name == '') {
-            model.name = mod.id;
+        if (model.source) {
+            model.source = model.source == 'nexus' ? 'Nexus Mods' : model.source;
+        }
+        if (model.type && model.type === 'Default') {
+            model.type = '';
         }
         return model;
     }
     createShowcase(api: IExtensionApi, model: ITemplateModel): Promise<string> {
-        var template = fs.readFileSync(path.join(__dirname, 'csv.mustache'), { encoding: 'utf8' });
+        var template = fs.readFileSync(path.join(__dirname, 'plaintext.mustache'), { encoding: 'utf8' });
         var output = Mustache.render(template, model);
         return Promise.resolve(output);
     }
