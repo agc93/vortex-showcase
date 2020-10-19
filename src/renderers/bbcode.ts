@@ -13,8 +13,8 @@ export class BBCodeRenderer implements IShowcaseRenderer {
     createFileName(title: string): string {
         return undefined;
     }
-    createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay {
-        var model = ModInfoDisplay.create(api, mod);
+    createModel(api: IExtensionApi, mod: IMod, defaultFn?: () => ModInfoDisplay): ModInfoDisplay {
+        var model = defaultFn();
         if (model.source && model.link) {
             model.source = `[url=${model.link}]${model.source == 'nexus' ? 'Nexus Mods' : model.source}[/url]`;
         }

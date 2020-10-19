@@ -22,50 +22,46 @@ export class ModInfoDisplay {
     type: string;
     notes: string;
     meta: any;
+}
 
-    static create(api: IExtensionApi, mod: IMod): ModInfoDisplay {
-        const getGameName = (gameId: string) => {
-            var knownGames = util.getSafe<{name: string; id: string}[]>(api.getState().session, ['gameMode', 'known'], []);
-            var knownGame = knownGames.find(g => g.id == gameId);
-            return knownGame ? knownGame.name : gameId;
-        }
-        var game = util.getSafe(mod.attributes, ['downloadGame'], selectors.activeGameId(api.getState()))
-        var gameName = getGameName(game);
-        var rawVersion = util.getSafe<string>(mod.attributes, ['version'], undefined)
-        return {
-            description: util.getSafe(mod.attributes, ['shortDescription'], util.getSafe(mod.attributes, ['description'], '')),
-            gameId: game,
-            gameName: gameName,
-            name: getModName(mod, ''),
-            image: util.getSafe(mod.attributes, ['pictureUrl'], undefined),
-            category: getCategoryName(util.getSafe(mod.attributes, ['category'], undefined), api.getState()) ?? 'Unknown',
-            author: util.getSafe(mod.attributes, ['author'], 'Unknown Author'),
-            version: rawVersion ? rawVersion.match(/^[A-Za-z]+/) ? rawVersion : `v${rawVersion}` : '',
-            installed: formatInstallTime(util.getSafe(mod.attributes, ['installTime'], undefined)),
-            source: util.getSafe(mod.attributes, ['source'], 'unknown source'),
-            link: getModLink(mod, game),
-            type: getModType(mod),
-            notes: util.getSafe(mod.attributes, ['notes'], undefined),
-            meta: {}
-        }
+/**
+ * @internal
+ * Creates the default mod info model for a given mod.
+ * 
+ * @param api The extension API
+ * @param mod The mod to create info model for.
+ */
+export function createModInfo(api: IExtensionApi, mod: IMod): ModInfoDisplay {
+    const getGameName = (gameId: string) => {
+        var knownGames = util.getSafe<{name: string; id: string}[]>(api.getState().session, ['gameMode', 'known'], []);
+        var knownGame = knownGames.find(g => g.id == gameId);
+        return knownGame ? knownGame.name : gameId;
+    }
+    var game = util.getSafe(mod.attributes, ['downloadGame'], selectors.activeGameId(api.getState()))
+    var gameName = getGameName(game);
+    var rawVersion = util.getSafe<string>(mod.attributes, ['version'], undefined)
+    return {
+        description: util.getSafe(mod.attributes, ['shortDescription'], util.getSafe(mod.attributes, ['description'], '')),
+        gameId: game,
+        gameName: gameName,
+        name: getModName(mod, ''),
+        image: util.getSafe(mod.attributes, ['pictureUrl'], undefined),
+        category: getCategoryName(util.getSafe(mod.attributes, ['category'], undefined), api.getState()) ?? 'Unknown',
+        author: util.getSafe(mod.attributes, ['author'], 'Unknown Author'),
+        version: rawVersion ? rawVersion.match(/^[A-Za-z]+/) ? rawVersion : `v${rawVersion}` : '',
+        installed: formatInstallTime(util.getSafe(mod.attributes, ['installTime'], undefined)),
+        source: util.getSafe(mod.attributes, ['source'], 'unknown source'),
+        link: getModLink(mod, game),
+        type: getModType(mod),
+        notes: util.getSafe(mod.attributes, ['notes'], undefined),
+        meta: {}
     }
 }
 
 /**
- * 
- * @param api 
- * @param mod 
- * 
  * @public
  */
-export function getDefaultModInfo(api: IExtensionApi, mod: IMod): ModInfoDisplay {
-    return ModInfoDisplay.create(api, mod);
-}
-
-/**
- * @public
- */
-export class NexusInfo {
+export interface NexusInfo {
     id: number;
     link: string;
 }

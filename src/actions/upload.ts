@@ -51,6 +51,6 @@ export class UploadAction implements IShowcaseAction {
         
     }
     isEnabled?(renderer: string): boolean {
-        return renderer == "Markdown";
+        return renderer == "Markdown" || renderer.includes('(Markdown)');
     }
 }

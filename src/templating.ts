@@ -1,13 +1,13 @@
 import { fs, util, log } from "vortex-api";
 import { IExtensionApi, IMod, INotificationAction, IDialogResult, ICheckbox } from "vortex-api/lib/types/api";
-import { ITemplateModel, ModInfoDisplay } from "./modinfo";
+import { createModInfo, ITemplateModel, ModInfoDisplay } from "./modinfo";
 import path = require('path');
 
 /**
  * @public
  */
 export interface IShowcaseRenderer {
-    createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay
+    createModel(api: IExtensionApi, mod: IMod, defaultModelFn?: () => ModInfoDisplay): ModInfoDisplay
     createShowcase(api: IExtensionApi, model: ITemplateModel): Promise<string>;
     createFileName?(title: string): string|undefined;
     isEnabled?(gameId: string): boolean;
@@ -40,8 +40,8 @@ export async function renderShowcase(api: IExtensionApi, gameTitle: string, show
     var renderer = selectedRenderer.renderer;
     var user = util.getSafe(api.getState().persistent, ['nexus', 'userInfo', 'name'], undefined) ?? 'an unknown user';
     var modInfo = mods.filter(im => im).map(m => {
-        var customModel = renderer.createModel(api, m);
-        var defaultModel = ModInfoDisplay.create(api, m);
+        var customModel = renderer.createModel(api, m, () => createModInfo(api, m));
+        var defaultModel = createModInfo(api, m);
         return api == null
             ? defaultModel
             : {...defaultModel, ...customModel}

@@ -13,8 +13,8 @@ export class PlainTextRenderer implements IShowcaseRenderer {
     createFileName(title: string): string {
         return `${util.deriveInstallName(title, undefined).substr(0, 64)}.txt`;
     }
-    createModel(api: IExtensionApi, mod: IMod): ModInfoDisplay {
-        var model = ModInfoDisplay.create(api, mod);
+    createModel(api: IExtensionApi, mod: IMod, defaultFn?: () => ModInfoDisplay): ModInfoDisplay {
+        var model = defaultFn();
         if (model.source) {
             model.source = model.source == 'nexus' ? 'Nexus Mods' : model.source;
         }
