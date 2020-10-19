@@ -8,4 +8,4 @@ FileDescription: |-
   Download and install using the Extensions pane in Vortex.
   To manually install, extract the zip to %APPDATA%\Vortex\plugins\vortex-showcase.
 
-  Read about the changes in this release at showcase.vortex.support/updates/
+  Read about the changes in this release at showcase.vortex.support/updates/v{{Version}}
