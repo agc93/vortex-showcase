@@ -13,22 +13,19 @@ on:
       - 'v*.*.*'
   pull_request:
     branches: [ master ]
+    paths-ignore:
+      - "docs/**"
+      - ".github/workflows/docs.yml"
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [12.x]
-
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 12.x
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 12.x
     - run: npm ci
     - run: npm run build --if-present
     - uses: actions/upload-artifact@v1
@@ -76,8 +73,8 @@ jobs:
     - uses: actions/checkout@master
     - uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.403'
-    - name: Restore Tools
+        dotnet-version: '3.1.x'
+    - name: Install Uploader
       shell: bash
       run: |
           dotnet tool install -g NexusUploader
