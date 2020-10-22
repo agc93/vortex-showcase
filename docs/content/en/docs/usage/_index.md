@@ -1,7 +1,7 @@
 ---
 title: "Usage"
 linkTitle: "Usage"
-weight: 20
+weight: 1
 description: >
   Getting started with Vortex Showcase and creating your own showcases
 ---
