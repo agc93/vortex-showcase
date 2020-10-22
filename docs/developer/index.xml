@@ -8,6 +8,9 @@
 &lt;h2 id="showcase-formats">Showcase Formats&lt;/h2>
 &lt;p>In it's simplest form, a format is a function that takes a model (an &lt;code>ITemplateModel&lt;/code> to be specific) and returns a string with the text content of the showcase. The complicated integration work of pulling mods and their metadata out of Vortex, as well as filtering out some stuff, is done by Showcase itself before the format renderers are called. For example, the default renderers take this model and use Mustache.js to render templates with that model and return the generated string content.&lt;/p>
 &lt;p>All showcase formats are loaded directly from Vortex's session state using the extension API, even the default ones. The Markdown and BBCode renderers are not hard-coded anywhere, they're just registered as formats when the extension loads.&lt;/p>
+&lt;blockquote>
+&lt;p>To see an example of how additional formats can be implemented and registered, check out the &lt;a href="https://github.com/agc93/vortex-showcase-extra">Extended Formats extension&lt;/a>.&lt;/p>
+&lt;/blockquote>
 &lt;h3 id="registering-formatsrenderers">Registering formats/renderers&lt;/h3>
 &lt;p>Registering a new format requires two things: an implementation of &lt;code>IShowcaseRenderer&lt;/code> and a call to &lt;code>addShowcaseRenderer(key: string, () =&amp;gt; IShowcaseRenderer)&lt;/code>.&lt;/p>
 &lt;p>The string key (i.e. &lt;code>Markdown&lt;/code>) is what's shown to users so make sure it's reasonably friendly. The second parameter is a callback to return your renderer. If you need constructor params or any other weird setup, you should be safe-ish to do that here.&lt;/p>
