@@ -18,6 +18,8 @@ In it's simplest form, a format is a function that takes a model (an `ITemplateM
 
 All showcase formats are loaded directly from Vortex's session state using the extension API, even the default ones. The Markdown and BBCode renderers are not hard-coded anywhere, they're just registered as formats when the extension loads.
 
+> To see an example of how additional formats can be implemented and registered, check out the [Extended Formats extension](https://github.com/agc93/vortex-showcase-extra).
+
 ### Registering formats/renderers
 
 Registering a new format requires two things: an implementation of `IShowcaseRenderer` and a call to `addShowcaseRenderer(key: string, () => IShowcaseRenderer)`.
