@@ -1,4 +1,4 @@
-import { fs, util, log } from "vortex-api";
+import { fs, util, log, selectors } from "vortex-api";
 import { IExtensionApi, IMod, INotificationAction, IDialogResult, ICheckbox } from "vortex-api/lib/types/api";
 import { createModInfo, ITemplateModel, ModInfoDisplay } from "./modinfo";
 import path = require('path');
@@ -24,6 +24,7 @@ export interface IShowcaseAction {
 
 type RendererRef = {name: string, renderer: IShowcaseRenderer};
 type ActionRef = {name: string, action: IShowcaseAction};
+type DeploymentManifest = {deploymentMethod: string, deploymentTime: number, stagingPath: string, targetPath: string};
 
 /**
  * Renders a showcase.
@@ -39,12 +40,21 @@ export async function renderShowcase(api: IExtensionApi, gameTitle: string, show
     api.dismissNotification('n-showcase-created');
     var renderer = selectedRenderer.renderer;
     var user = util.getSafe(api.getState().persistent, ['nexus', 'userInfo', 'name'], undefined) ?? 'an unknown user';
+    var order: IMod[] = await util.sortMods(selectors.activeGameId(api.getState()), mods, api);
     var modInfo = mods.filter(im => im).map(m => {
         var customModel = renderer.createModel(api, m, () => createModInfo(api, m));
         var defaultModel = createModInfo(api, m);
-        return api == null
+        var merged = api == null
             ? defaultModel
-            : {...defaultModel, ...customModel}
+            : {...defaultModel, ...customModel};
+        if (order.find(o => o.id == m.id) !== undefined) {
+            merged.deployment.order = order.indexOf(m) + 1;
+        }
+        var manifest: DeploymentManifest = api == null ? undefined : util.getManifest(api, m.type, merged.gameId)
+        if (manifest && manifest.deploymentTime) {
+            merged.deployment.time = new Date(manifest.deploymentTime * 1000);
+        }
+        return merged;
     }).filter(mod => mod);
     log('debug', `generated ${modInfo.length} models from ${mods.length} included mods`);
     var model: ITemplateModel = {

@@ -1,7 +1,12 @@
 import { IMod, IExtensionApi } from "vortex-api/lib/types/api";
 import { util, selectors } from "vortex-api";
-import { formatInstallTime, getModLink, getModType } from "./util";
+import { formatInstallTime, getModLink, getModType, getUploadedDate } from "./util";
 import { getModName, getCategoryName } from "vortex-ext-common";
+
+/**
+ * @public
+ */
+export type ModDeploymentMeta = {order?: number, time?: Date};
 
 /**
  * @public
@@ -22,6 +27,7 @@ export class ModInfoDisplay {
     type: string;
     notes: string;
     meta: any;
+    deployment: ModDeploymentMeta;
 }
 
 /**
@@ -54,7 +60,14 @@ export function createModInfo(api: IExtensionApi, mod: IMod): ModInfoDisplay {
         link: getModLink(mod, game),
         type: getModType(mod),
         notes: util.getSafe(mod.attributes, ['notes'], undefined),
-        meta: {}
+        nexus: {
+            id: util.getSafe(mod.attributes, ['modId'], undefined), 
+            fileId: util.getSafe(mod.attributes, ['fileId'], undefined),
+            endorsed: util.getSafe<string>(mod.attributes, ['endorsed'], "") === "Endorsed",
+            uploaded: getUploadedDate(mod)
+        },
+        meta: {},
+        deployment: {}
     }
 }
 
@@ -63,7 +76,9 @@ export function createModInfo(api: IExtensionApi, mod: IMod): ModInfoDisplay {
  */
 export interface NexusInfo {
     id: number;
-    link: string;
+    fileId: number;
+    endorsed: boolean;
+    uploaded: Date;
 }
 
 /**

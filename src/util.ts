@@ -53,6 +53,20 @@ export function getModType(mod: IMod): string {
 }
 
 /**
+ * Returns the uploaded date for a given mod (if available, otherwise undefined)
+ * 
+ * @param mod The mod
+ */
+export function getUploadedDate(mod: IMod): Date|undefined {
+    var uploaded = util.getSafe<number>(mod.attributes, ['uploadedTimestamp'], undefined);
+    if (uploaded) {
+        var d = new Date(uploaded * 1000);
+        return d;
+    }
+    return undefined;
+}
+
+/**
  * Title cases the given string
  * 
  * @param str The input string
