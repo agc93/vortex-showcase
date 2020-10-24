@@ -7,6 +7,7 @@ import { renderShowcase, IShowcaseRenderer, IShowcaseAction } from "./templating
 import { rendererStore, registerShowcaseRenderer, registerShowcaseAction, updateMRU } from "./store";
 import { MarkdownRenderer, BBCodeRenderer, PlainTextRenderer } from "./renderers";
 import { ClipboardAction, UploadAction } from "./actions";
+import { Settings, settingsReducer, ShowcaseSettings } from "./settings";
 
 /**
  * @internal
@@ -42,7 +43,9 @@ function main(context: IExtensionContext) {
     const registerAction = (key: string, actionFn: () => IShowcaseAction) => {
         context.api.store.dispatch(registerShowcaseAction(key, actionFn));
     }
+    context.registerReducer(['settings', 'showcase'], settingsReducer)
     context.registerReducer(['session', 'showcase'], rendererStore);
+    context.registerSettings('Interface', ShowcaseSettings, () => {t: context.api.translate}, () => true);
     // ↘ this isn't in 1.2.17, you idiot
     context.registerAPI('addShowcaseRenderer', (key: string, rendererFunc: () => IShowcaseRenderer) => registerRenderer(key, rendererFunc), {minArguments: 2});
     context.registerAPI('addShowcaseAction', (key: string, actionFn: () => IShowcaseAction) => registerAction(key, actionFn), {minArguments: 2});
@@ -166,8 +169,43 @@ async function createShowcase(api: IExtensionApi, modIds: string[], format?:stri
             renderer: renderer?.name, 
             action: action || 'none'
         });
+        try {
+            var sort = Settings.getSortOrder(api.getState());
+            switch (sort) {
+                case 'deploy-order':
+                    includedMods = await deploySort(api, includedMods);
+                    break;
+                case 'install-time':
+                    includedMods = await timeSort(api, includedMods);
+                case 'alphabetical':
+                default:
+                    break;
+            }
+        } catch (err) {
+            log('error', 'Error encountered during showcase mod sort', {err});
+            api.sendNotification({'type': 'warning', title: 'Showcase sorting failed!', message: 'Your showcase will still work, but might be out of order!'});
+        }
         renderShowcase(api, currentGame.name, userTitle, includedMods, renderer, action)
     }
+}
+
+async function timeSort(api: IExtensionApi, mods: IMod[]): Promise<IMod[]> {
+    var sorted = mods.sort((a, b) => {
+        var aInstall = util.getSafe<string>(a.attributes, ['installTime'], undefined);
+        var bInstall = util.getSafe<string>(b.attributes, ['installTime'], undefined);
+        return aInstall == undefined || bInstall == undefined
+            ? 0
+            : aInstall.localeCompare(bInstall);
+    })
+    return sorted;
+}
+
+async function deploySort(api: IExtensionApi, mods: IMod[]): Promise<IMod[]> {
+    var order: IMod[] = await util.sortMods(selectors.activeGameId(api.getState()), mods, api);
+    var sorted = mods.sort((a, b) => {
+        return order.indexOf(a) - order.indexOf(b);
+    });
+    return sorted;
 }
 
 module.exports = {
