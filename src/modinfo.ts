@@ -1,6 +1,6 @@
 import { IMod, IExtensionApi } from "vortex-api/lib/types/api";
 import { util, selectors } from "vortex-api";
-import { formatInstallTime, getModLink, getModType, getUploadedDate } from "./util";
+import { formatInstallTime, getModLink, getModType, getModVersionText, getUploadedDate } from "./util";
 import { getModName, getCategoryName } from "vortex-ext-common";
 
 /**
@@ -45,7 +45,6 @@ export function createModInfo(api: IExtensionApi, mod: IMod): ModInfoDisplay {
     }
     var game = util.getSafe(mod.attributes, ['downloadGame'], selectors.activeGameId(api.getState()))
     var gameName = getGameName(game);
-    var rawVersion = util.getSafe<string>(mod.attributes, ['version'], undefined)
     return {
         description: util.getSafe(mod.attributes, ['shortDescription'], util.getSafe(mod.attributes, ['description'], '')),
         gameId: game,
@@ -54,7 +53,7 @@ export function createModInfo(api: IExtensionApi, mod: IMod): ModInfoDisplay {
         image: util.getSafe(mod.attributes, ['pictureUrl'], undefined),
         category: getCategoryName(util.getSafe(mod.attributes, ['category'], undefined), api.getState()) ?? 'Unknown',
         author: util.getSafe(mod.attributes, ['author'], 'Unknown Author'),
-        version: rawVersion ? rawVersion.match(/^[A-Za-z]+/) ? rawVersion : `v${rawVersion}` : '',
+        version: getModVersionText(mod),
         installed: formatInstallTime(util.getSafe(mod.attributes, ['installTime'], undefined)),
         source: util.getSafe(mod.attributes, ['source'], 'unknown source'),
         link: getModLink(mod, game),

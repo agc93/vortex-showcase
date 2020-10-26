@@ -1,5 +1,5 @@
 import { IState, IMod, IExtensionApi, IProfileMod } from "vortex-api/lib/types/api";
-import { selectors, util } from 'vortex-api';
+import { log, selectors, util } from 'vortex-api';
 
 /**
  * Formats the given installation timestamp.
@@ -39,6 +39,24 @@ export function getModLink(mod: IMod, gameFallback?: string): string {
         }
     }
     return '';
+}
+
+/**
+ * Returns a string representing the mod version from mod attributes.
+ * 
+ * @param mod The mod object
+ * @param fallbackVersion Fallback/default value for the version, if not found in mod attributes
+ */
+export function getModVersionText(mod: IMod, fallbackVersion?: string): string {
+    try {
+        fallbackVersion = fallbackVersion ?? '';
+        var rawVersion = util.getSafe<string>(mod.attributes, ['version'], undefined);
+        rawVersion ? String(rawVersion).match(/^[A-Za-z]+/) ? rawVersion : `v${rawVersion}` : fallbackVersion;
+        return rawVersion;
+    } catch (error) {
+        log('error', 'Error parsing version value from mod!', {rawVersion, mod: mod.installationPath});
+        return '';
+    }
 }
 
 /**

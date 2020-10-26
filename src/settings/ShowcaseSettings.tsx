@@ -33,7 +33,7 @@ class GeneralSettings extends ComponentEx<IProps, {}> {
     public render = (): JSX.Element => {
         const { t, sortOrder } = this.props;
         var modes = Object.keys(this.modes).map(m => {
-            return <option value={m}>{t(this.modes[m])}</option>
+            return <option key={m} value={m}>{t(this.modes[m])}</option>
         });
         return (
             <form>
