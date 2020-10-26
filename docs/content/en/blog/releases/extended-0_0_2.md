@@ -12,13 +12,11 @@ description: >
 This release is now available [on Nexus Mods](https://www.nexusmods.com/site/mods/182?tab=files).
 {{% /pageinfo %}}
 
-This marks the first release of the Extended Formats package for Vortex Showcase. This extension (of an extension) adds a handful of extra formats to Vortex Showcase. 
+This marks the first bugfix for the Extended Formats package for Vortex Showcase. 
 
-This initial release adds three new formats to Showcase:
+This release fixes a few bugs and improves the CSV format to better quote and escape complex content (like mod descriptions and categories) that could create invalid CSV output files.
 
-- CSV
-- Discord
-- Markdown Table
+---
 
 The CSV and Discord formats were removed from the main extension in the last update so this extension re-introduces them alongside the new more compact Markdown Table format.
 
