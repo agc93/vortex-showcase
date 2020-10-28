@@ -1,6 +1,6 @@
 import { IMod, IExtensionApi } from "vortex-api/lib/types/api";
 import { util, selectors } from "vortex-api";
-import { formatInstallTime, getModLink, getModType, getModVersionText, getUploadedDate } from "./util";
+import { formatInstallTime, getModLink, getModVersionText, getUploadedDate, getModType } from "./util";
 import { getModName, getCategoryName } from "vortex-ext-common";
 
 /**
@@ -49,7 +49,7 @@ export function createModInfo(api: IExtensionApi, mod: IMod): ModInfoDisplay {
         description: util.getSafe(mod.attributes, ['shortDescription'], util.getSafe(mod.attributes, ['description'], '')),
         gameId: game,
         gameName: gameName,
-        name: getModName(mod, ''),
+        name: getModName(mod, util.getSafe(mod.attributes, ['fileName'], '')),
         image: util.getSafe(mod.attributes, ['pictureUrl'], undefined),
         category: getCategoryName(util.getSafe(mod.attributes, ['category'], undefined), api.getState()) ?? 'Unknown',
         author: util.getSafe(mod.attributes, ['author'], 'Unknown Author'),
