@@ -1,4 +1,16 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vortex Showcase – Updates</title><link>/blog/</link><description>Recent content in Updates on Vortex Showcase</description><generator>Hugo -- gohugo.io</generator><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Alpha 1.5 Release</title><link>/blog/2020/10/26/alpha-1.5-release/</link><pubDate>Mon, 26 Oct 2020 00:00:00 +0000</pubDate><guid>/blog/2020/10/26/alpha-1.5-release/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vortex Showcase – Updates</title><link>/blog/</link><description>Recent content in Updates on Vortex Showcase</description><generator>Hugo -- gohugo.io</generator><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Alpha 1.6 Release</title><link>/blog/2020/10/28/alpha-1.6-release/</link><pubDate>Wed, 28 Oct 2020 00:00:00 +0000</pubDate><guid>/blog/2020/10/28/alpha-1.6-release/</guid><description>
+&lt;div class="pageinfo pageinfo-primary">
+&lt;p>This release is now available &lt;a href="https://www.nexusmods.com/site/mods/145?tab=files">on Nexus Mods&lt;/a>.&lt;/p>
+&lt;/div>
+&lt;p>This release is a minor fix update that adds a small tweak and improves the extension API. This includes:&lt;/p>
+&lt;ul>
+&lt;li>Showcases should &lt;em>hopefully&lt;/em> give more descriptive names for mods with multiple files/variants (thanks @ronamit for reporting this)&lt;/li>
+&lt;li>The extension API typings have been folded in to the main package. This won't change the API itself, but should make it easier to keep the API and typings in sync.&lt;/li>
+&lt;/ul>
+&lt;p>You shouldn't see many obvious changes in this release, so make sure to check out all the release notes for &lt;a href="../updates">previous versions&lt;/a>.&lt;/p>
+&lt;p>This version &lt;em>requires&lt;/em> Vortex 1.3+, older Vortex versions can continue to use 0.0.4.&lt;/p>
+&lt;p>Extension authors might want to check the &lt;a href="../docs/developer/extensions">developer docs&lt;/a> for detail on the new extensions API.&lt;/p>
+&lt;p>Get started with your own mod showcases using the action buttons in your Mods page, and make sure to report any &lt;a href="https://github.com/agc93/vortex-showcase">issues you find&lt;/a> or &lt;a href="https://www.nexusmods.com/site/mods/145?tab=posts">give any feedback&lt;/a>.&lt;/p></description></item><item><title>Blog: Alpha 1.5 Release</title><link>/blog/2020/10/26/alpha-1.5-release/</link><pubDate>Mon, 26 Oct 2020 00:00:00 +0000</pubDate><guid>/blog/2020/10/26/alpha-1.5-release/</guid><description>
 &lt;div class="pageinfo pageinfo-primary">
 &lt;p>This release is now available &lt;a href="https://www.nexusmods.com/site/mods/145?tab=files">on Nexus Mods&lt;/a>.&lt;/p>
 &lt;/div>
