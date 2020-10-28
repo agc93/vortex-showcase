@@ -2,11 +2,15 @@
   "name": "vortex-showcase",
   "version": "0.1.5",
   "description": "An extension for Vortex for building and sharing mod lists",
-  "main": "./dist/index.js",
   "scripts": {
     "webpack": "node ./node_modules/webpack/bin/webpack --config webpack.config.js --display-error-details --progress --profile --color",
-    "build": "npm run webpack && extractInfo && copyfiles -f ./src/*.mustache ./src/*.svg ./dist/"
+    "build": "npm run webpack && extractInfo && npm run api && copyfiles -f ./src/*.mustache ./src/*.svg ./dist/",
+    "api": "api-extractor run --local"
   },
+  "files": [
+    "dist/*.d.ts"
+  ],
+  "types": "dist/vortex-showcase.d.ts",
   "author": "agc93",
   "license": "MIT",
   "repository": {
@@ -15,6 +19,8 @@
   },
   "devDependencies": {
     "@agc93/privatebin": "^0.0.2",
+    "@microsoft/api-extractor": "^7.10.6",
+    "@microsoft/api-documenter": "^7.9.18",
     "@types/i18next": "^12.1.0",
     "@types/mustache": "^4.0.1",
     "@types/node": "^12.0.10",

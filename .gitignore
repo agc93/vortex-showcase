@@ -120,3 +120,4 @@ src/*.js
 apidoc/**
 # api/lib/**
 lib/**
+temp/

@@ -1,7 +1,7 @@
 ---
 title: "Extensions API"
 linkTitle: "Extensions"
-weight: 99
+weight: 10
 description: >
   Integrating and extending Showcase from extensions
 ---

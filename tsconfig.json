@@ -4,18 +4,21 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "noImplicitAny": false,
-        "removeComments": true,
+        "removeComments": false,
         "preserveConstEnums": true,
         "rootDir": "src",
-        "outDir": "./out",
+        "outDir": "./lib",
         "jsx": "react",
         "sourceMap": false,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "declaration": true,
+        "declarationMap": true
     },
     "exclude": [
         "node_modules"
     ],
     "include": [
-        "src/index.ts"
+        "src/index.ts",
+        "src/api.ts"
     ]
 }
