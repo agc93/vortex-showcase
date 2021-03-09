@@ -1,4 +1,21 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vortex Showcase – Updates</title><link>/blog/</link><description>Recent content in Updates on Vortex Showcase</description><generator>Hugo -- gohugo.io</generator><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Extended Formats 0.3 Release</title><link>/blog/2021/02/18/extended-formats-0.3-release/</link><pubDate>Thu, 18 Feb 2021 00:00:00 +0000</pubDate><guid>/blog/2021/02/18/extended-formats-0.3-release/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vortex Showcase – Updates</title><link>/blog/</link><description>Recent content in Updates on Vortex Showcase</description><generator>Hugo -- gohugo.io</generator><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Alpha 2.1 Release</title><link>/blog/2021/03/09/alpha-2.1-release/</link><pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate><guid>/blog/2021/03/09/alpha-2.1-release/</guid><description>
+&lt;div class="pageinfo pageinfo-primary">
+&lt;p>This release is now available &lt;a href="https://www.nexusmods.com/site/mods/145?tab=files">on Nexus Mods&lt;/a>.&lt;/p>
+&lt;/div>
+&lt;p>This release is a fix update that adds some fixes and optimisations, mostly for Vortex 1.4. This includes:&lt;/p>
+&lt;ul>
+&lt;li>Showcase generation should be dramatically faster now!
+&lt;ul>
+&lt;li>There's been a pesky slowdown appearing with larger mod lists that's been hard to nail down&lt;/li>
+&lt;li>Turns out it was caused from looking up Vortex's manifest too often, which it no longer does&lt;/li>
+&lt;li>Looks like this was also leading to out of memory crashes in newer versions&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>You shouldn't see many obvious changes in this release, so make sure to check out all the release notes for &lt;a href="../updates">previous versions&lt;/a>.&lt;/p>
+&lt;p>This version &lt;em>requires&lt;/em> Vortex 1.4+, older Vortex versions can continue to use 0.1.x.&lt;/p>
+&lt;p>Extension authors might want to check the &lt;a href="../docs/developer/extensions">developer docs&lt;/a> for detail on the extensions API.&lt;/p>
+&lt;p>Get started with your own mod showcases using the action buttons in your Mods page, and make sure to report any &lt;a href="https://github.com/agc93/vortex-showcase">issues you find&lt;/a> or &lt;a href="https://www.nexusmods.com/site/mods/145?tab=posts">give any feedback&lt;/a>.&lt;/p></description></item><item><title>Blog: Extended Formats 0.3 Release</title><link>/blog/2021/02/18/extended-formats-0.3-release/</link><pubDate>Thu, 18 Feb 2021 00:00:00 +0000</pubDate><guid>/blog/2021/02/18/extended-formats-0.3-release/</guid><description>
 &lt;div class="pageinfo pageinfo-primary">
 &lt;p>This release is now available &lt;a href="https://www.nexusmods.com/site/mods/182?tab=files">on Nexus Mods&lt;/a>.&lt;/p>
 &lt;/div>
