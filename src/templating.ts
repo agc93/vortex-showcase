@@ -69,17 +69,16 @@ export async function renderShowcase(api: IExtensionApi, gameTitle: string, show
     api.dismissNotification('n-showcase-created');
     var renderer = selectedRenderer.renderer;
     var user = util.getSafe(api.getState().persistent, ['nexus', 'userInfo', 'name'], undefined) ?? 'an unknown user';
-    // var order: IMod[] = await util.sortMods(selectors.activeGameId(api.getState()), mods, api);
+    var manifests = getManifestSet(api, mods);
     var modInfo = mods.filter(im => im).map(m => {
-        var customModel = renderer.createModel(api, m, () => createModInfo(api, m));
         var defaultModel = createModInfo(api, m);
-        var merged = api == null
+        var customModel = renderer.createModel(api, m, () => defaultModel);
+        // var defaultModel = createModInfo(api, m);
+        var merged = {...defaultModel, ...customModel};
+        /* var merged = api == null
             ? defaultModel
-            : {...defaultModel, ...customModel};
-        /* if (order.find(o => o.id == m.id) !== undefined) {
-            merged.deployment.order = order.indexOf(m) + 1;
-        } */
-        var manifest: DeploymentManifest = api == null ? undefined : util.getManifest(api, m.type, merged.gameId)
+            : {...defaultModel, ...customModel}; */
+        var manifest: DeploymentManifest = manifests[m.type];
         if (manifest && manifest.deploymentTime) {
             merged.deployment.time = new Date(manifest.deploymentTime * 1000);
         }
@@ -121,6 +120,19 @@ export async function renderShowcase(api: IExtensionApi, gameTitle: string, show
             override.action.runAction(selectedRenderer.name, output);
         }
     }
+}
+
+function getManifestSet(api: IExtensionApi, mods: IMod[]): {[modType: string]: DeploymentManifest} {
+    var types = mods.filter(m => !!m).map(m => m.type);
+    types = [...new Set(types)];
+    var manifestSet = {};
+    for (const modType of types) {
+        var manifest: DeploymentManifest = util.getManifest(api, modType)
+        if (manifest && !manifestSet[modType]) {
+            manifestSet[modType] = manifest;
+        }
+    }
+    return manifestSet;
 }
 
 function getActions(api: IExtensionApi, renderer: string): ActionRef[] {
