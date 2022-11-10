@@ -29,7 +29,7 @@
     "@types/redux": "^3.6.0",
     "@types/redux-thunk": "^2.1.0",
     "copyfiles": "^2.4.1",
-    "electron": "^11.2.3",
+    "electron": "^18.3.7",
     "i18next": "^19.0.1",
     "mustache": "^4.1.0",
     "react": "^16.12.0",
